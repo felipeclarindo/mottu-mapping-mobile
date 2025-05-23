@@ -25,6 +25,7 @@ export type Moto = {
   setorName: string;
   setorColorRgb: string;
   setorId: string;
+  plate?: string;
 };
 
 export type ImageModalProps = {
