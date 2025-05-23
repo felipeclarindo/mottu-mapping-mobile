@@ -6,6 +6,7 @@ interface MotoCardProps extends Moto {}
 
 const MotoCard = ({
   id,
+  plate,
   setorDescription,
   setorName,
   setorColorRgb,
@@ -13,7 +14,6 @@ const MotoCard = ({
 }: MotoCardProps) => {
   return (
     <View style={styles.card}>
-      <View style={[styles.colorSquare, { backgroundColor: setorColorRgb }]} />
       <Text style={styles.title}>{setorName}</Text>
       <Text style={styles.subtitle}>{setorDescription}</Text>
       <View style={styles.infoRow}>
@@ -23,6 +23,16 @@ const MotoCard = ({
       <View style={styles.infoRow}>
         <Text style={styles.label}>Setor ID:</Text>
         <Text style={styles.value}>{setorId}</Text>
+      </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Cor do Setor: </Text>
+        <View
+          style={
+            (styles.value,
+            styles.colorSquare,
+            { backgroundColor: setorColorRgb })
+          }
+        />
       </View>
     </View>
   );
