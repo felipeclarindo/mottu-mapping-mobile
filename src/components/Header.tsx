@@ -2,42 +2,46 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-interface HeaderProps {
+type HeaderProps = {
   title: string;
-  onMenuPress?: () => void;
-}
+  onMenuPress: () => void;
+};
 
-const Header: React.FC<HeaderProps> = ({ title, onMenuPress }) => {
+const Header = ({ title, onMenuPress }: HeaderProps) => {
   return (
     <View style={styles.container}>
-      {onMenuPress && (
-        <TouchableOpacity style={styles.menuIcon} onPress={onMenuPress}>
-          <Feather name="menu" size={24} color="#fff" />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        onPress={onMenuPress}
+        style={styles.menuButton}
+        activeOpacity={0.7}
+      >
+        <Feather name="menu" size={28} color="#A3E635" />
+      </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
+      <View style={{ width: 28, height: 28 }} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 15,
+    backgroundColor: "#121212",
+    height: 60,
     paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: "#2A2A2A",
+    elevation: 12,
+  },
+  menuButton: {
+    padding: 4,
   },
   title: {
-    color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
-    flex: 1,
-    textAlign: "center",
-  },
-  menuIcon: {
-    marginRight: 10,
+    color: "#A3E635",
   },
 });
 

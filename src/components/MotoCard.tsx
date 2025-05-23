@@ -1,64 +1,81 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { Moto } from "../types";
 
-interface MotoCardProps {
-  id: string;
-  status: string;
-}
+interface MotoCardProps extends Moto {}
 
-const MotoCard: React.FC<MotoCardProps> = ({ id, status }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "OK":
-        return "#28a745";
-      case "Em Manutenção":
-        return "#ffc107";
-      case "Pronta":
-        return "#007bff";
-      default:
-        return "#6c757d";
-    }
-  };
-
-  const statusColor = getStatusColor(status);
-
+const MotoCard = ({
+  id,
+  setorDescription,
+  setorName,
+  setorColorRgb,
+  setorId,
+}: MotoCardProps) => {
   return (
     <View style={styles.card}>
-      <Text style={styles.id}>ID: {id}</Text>
-      <Text style={[styles.status, { color: statusColor }]}>
-        Status: {status}
-      </Text>
+      <View style={[styles.colorSquare, { backgroundColor: setorColorRgb }]} />
+      <Text style={styles.title}>{setorName}</Text>
+      <Text style={styles.subtitle}>{setorDescription}</Text>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>ID:</Text>
+        <Text style={styles.value}>{id}</Text>
+      </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Setor ID:</Text>
+        <Text style={styles.value}>{setorId}</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 15,
+    backgroundColor: "#1F1F1F",
+    borderRadius: 12,
+    padding: 16,
     width: "45%",
-    minWidth: 150,
-    marginBottom: 10,
+    minWidth: 160,
+    margin: 8,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
-  id: {
+  colorSquare: {
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    marginBottom: 12,
+  },
+  title: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 5,
+    fontWeight: "700",
+    color: "#A3E635",
+    marginBottom: 4,
   },
-  status: {
+  subtitle: {
     fontSize: 14,
-    fontWeight: "bold",
+    color: "#C7D6B9",
+    textAlign: "center",
+    marginBottom: 12,
+  },
+  infoRow: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  label: {
+    fontSize: 12,
+    color: "#888",
+    fontWeight: "600",
+  },
+  value: {
+    fontSize: 12,
+    color: "#FFF",
+    fontWeight: "500",
   },
 });
 
