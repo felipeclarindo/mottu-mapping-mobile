@@ -9,23 +9,21 @@ import {
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import Header from "../components/Header";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import { generateCompleteReport } from "../utils";
+import { generateCompleteReport } from "../../utils";
 
-const RelatorioScreen = () => {
+const ReportPage = () => {
   const relatorioCompleto = generateCompleteReport();
   const navigation = useNavigation();
 
-  const compartilharRelatorio = async () => {
+  const shareReport = async () => {
     try {
-      // Cria um arquivo de texto com o relatório
       const fileUri = `${FileSystem.cacheDirectory}relatorio_completo.txt`;
       await FileSystem.writeAsStringAsync(fileUri, relatorioCompleto, {
         encoding: FileSystem.EncodingType.UTF8,
       });
-
-      // Compartilha o arquivo
       await Sharing.shareAsync(fileUri, {
         mimeType: "text/plain",
         dialogTitle: "Compartilhar Relatório Completo",
@@ -35,7 +33,6 @@ const RelatorioScreen = () => {
         "Erro",
         `Não foi possível compartilhar o arquivo: ${error.message}`
       );
-      console.error("Erro ao compartilhar relatório:", error);
     }
   };
 
@@ -45,14 +42,16 @@ const RelatorioScreen = () => {
         title="Relatório"
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
-      {/* Adicione o Header */}
-      <ScrollView style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Relatório Completo do Pátio</Text>
-        <Text style={styles.relatorioTexto}>{relatorioCompleto}</Text>
-        <TouchableOpacity style={styles.button} onPress={compartilharRelatorio}>
+        <View style={styles.card}>
+          <Text style={styles.relatorioTexto}>{relatorioCompleto}</Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={shareReport}>
           <Text style={styles.buttonText}>Compartilhar Relatório</Text>
         </TouchableOpacity>
       </ScrollView>
+      <Footer />
     </View>
   );
 };
@@ -60,38 +59,43 @@ const RelatorioScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#121212",
   },
   content: {
-    flexGrow: 1,
     padding: 20,
-    backgroundColor: "#f0f0f0",
+    flexGrow: 1,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#333",
+    fontWeight: "700",
+    color: "#A3E635",
     textAlign: "center",
+    marginBottom: 16,
+  },
+  card: {
+    backgroundColor: "#1F1F1F",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: "#3A6E33",
   },
   relatorioTexto: {
     fontSize: 14,
-    color: "#444",
+    color: "#C7D6B9",
     lineHeight: 20,
-    marginBottom: 20,
   },
   button: {
-    backgroundColor: "#007BFF",
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: "#4CAF50",
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: "center",
-    minWidth: 200,
-    alignSelf: "center",
   },
   buttonText: {
-    color: "#fff",
+    color: "#121212",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
 });
 
-export default RelatorioScreen;
+export default ReportPage;
