@@ -1,36 +1,27 @@
+// App.tsx
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
-import HomePage from "./pages/HomePage";
-import PatioPage from "./pages/PatioPage";
-import ReportPage from "./pages/ReportPage";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet, Platform, StatusBar } from "react-native";
+import AppStack from "./navigation/AppStack";
 
-const Stack = createNativeStackNavigator();
-
-function App() {
+export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomePage}
-          options={{ title: "Home" }}
-        />
-        <Stack.Screen
-          name="Patio"
-          component={PatioPage}
-          options={{ title: "Pátio de Motos" }}
-        />
-        <Stack.Screen
-          name="Report"
-          component={ReportPage}
-          options={{ title: "Report" }}
-        />
-      </Stack.Navigator>
+      <SafeAreaView style={styles.safeArea}>
+        <ExpoStatusBar translucent backgroundColor="transparent" style="dark" />
+        <AppStack />
+      </SafeAreaView>
     </NavigationContainer>
   );
 }
 
-export default App;
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    padding: 0,
+    margin: 0,
+    backgroundColor: "#fff",
+  },
+});
