@@ -3,13 +3,17 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 
-function CustomDrawerContent(props: any) {
+export default function CustomDrawerContent(props: any) {
   return (
     <DrawerContentScrollView {...props} style={styles.drawerContent}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Meu App</Text>
+        <Image
+          source={require("../assets/favicon.png")}
+          style={styles.logo}
+          resizeMode="cover"
+        />
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
@@ -22,14 +26,14 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
+    marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#0B3D0B",
+    borderBottomColor: "#54C65B",
+    alignItems: "center",
   },
-  headerText: {
-    color: "#0B3D0B",
-    fontSize: 24,
-    fontWeight: "bold",
+  logo: {
+    width: 150,
+    height: 120,
+    marginBottom: 10,
   },
 });
-
-export default CustomDrawerContent;
