@@ -16,8 +16,9 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { BarChart } from "react-native-chart-kit";
 import Separator from "../../components/ui/Separator";
-import { HomeScreenNavigationProp, UserProps } from "../../types";
+import { UserProps } from "../../types";
 import DashboardCard from "../../components/DashboardCard";
+import { HomeScreenNavigationProp } from "../../types/navigation";
 
 const chartConfig = {
   backgroundGradientFrom: "#121212",
@@ -68,7 +69,7 @@ const HomePage = () => {
     setModalVisible(false);
     setTimeout(() => {
       setShowRelatorioButtons(false);
-    }, 5000);
+    }, 15000);
   };
   const handleRedirectToPatio = () => navigation.navigate("patio");
   const handleRedirectToReport = () => navigation.navigate("report");
@@ -122,7 +123,7 @@ const HomePage = () => {
 
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#A3E635" />
+            <ActivityIndicator size="large" color="#54C65B" />
             <Text style={styles.loadingText}>Carregando...</Text>
           </View>
         )}
@@ -166,13 +167,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
     marginBottom: 16,
-    color: "#A3E635",
+    color: "#54C65B",
   },
   subtitle: {
     textAlign: "center",
     fontSize: 22,
     fontWeight: "600",
-    color: "#A3E635",
+    color: "#54C65B",
     marginTop: 16,
     marginBottom: 12,
   },
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: 14,
-    color: "#A3E635",
+    color: "#54C65B",
     fontWeight: "500",
   },
   buttonsContainer: {

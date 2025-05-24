@@ -12,10 +12,11 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { UserProps } from "../../types";
+import { AccountScreenNavigationProp } from "../../types/navigation";
 
 const AccountPage = () => {
   const [user, setUser] = useState<UserProps | null>(null);
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<AccountScreenNavigationProp>();
 
   const loadUser = useCallback(async () => {
     try {
@@ -34,9 +35,30 @@ const AccountPage = () => {
     loadUser();
   }, [loadUser]);
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("user");
-    navigation.navigate("login");
+  const handleLogout = () => {
+    Alert.alert("Sair", "Deseja realmente sair?", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Sair",
+        style: "destructive",
+        onPress: () => {
+          const logout = async () => {
+            await AsyncStorage.removeItem("user");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "login" as never }],
+            });
+          };
+          logout();
+        },
+      },
+    ]);
+  };
+  const handleEditAccount = () => {
+    Alert.alert("Editar Conta", "Funcionalidade ainda não implementada.");
   };
 
   return (
@@ -62,7 +84,7 @@ const AccountPage = () => {
         <View style={styles.buttonGroup}>
           <TouchableOpacity
             style={styles.primaryButton}
-            onPress={() => console.log("Editar conta")}
+            onPress={handleEditAccount}
             activeOpacity={0.7}
           >
             <Text style={styles.primaryButtonText}>Editar Conta</Text>
@@ -95,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#A3E635",
+    color: "#54C65B",
     textAlign: "center",
     marginBottom: 24,
   },

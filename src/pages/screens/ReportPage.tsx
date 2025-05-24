@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#A3E635",
+    color: "#54C65B",
     textAlign: "center",
     marginBottom: 16,
   },

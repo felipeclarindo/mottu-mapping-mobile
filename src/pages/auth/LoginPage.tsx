@@ -10,22 +10,25 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { LoginScreenNavigationProp } from "../../types/navigation";
 
-const LoginPage = ({ navigation }: any) => {
+const LoginPage = () => {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const handleLogin = async () => {
     if (!user || !password) {
-      Alert.alert("Atenção", "Preencha e-mail e Password.");
+      Alert.alert("Atenção", "Preencha e-mail e senha.");
       return;
     }
     const userData = { user, email: "teste@gmail.com" };
     try {
       await AsyncStorage.setItem("user", JSON.stringify(userData));
-      navigation.navigate("home");
+      navigation.navigate("drawer");
     } catch (err) {
-      Alert.alert("Erro", "Não foi possível salvar os dados.");
+      Alert.alert("Erro", "Não foi possível realizar o login.");
       console.error(err);
     }
   };
@@ -42,7 +45,7 @@ const LoginPage = ({ navigation }: any) => {
         <Text style={styles.title}>Login</Text>
 
         <TextInput
-          placeholder="Usuario"
+          placeholder="Usuário"
           placeholderTextColor="#888"
           style={styles.input}
           keyboardType="default"
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#A3E635",
+    color: "#54C65B",
     textAlign: "center",
     marginBottom: 32,
   },
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   buttonText: { color: "#121212", fontSize: 16, fontWeight: "700" },
   footerText: { textAlign: "center", color: "#C7D6B9", fontSize: 14 },
   linkText: {
-    color: "#A3E635",
+    color: "#54C65B",
     fontWeight: "700",
     textDecorationLine: "underline",
   },

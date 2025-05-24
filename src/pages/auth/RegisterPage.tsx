@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#A3E635",
+    color: "#54C65B",
     textAlign: "center",
     marginBottom: 32,
   },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkText: {
-    color: "#A3E635",
+    color: "#54C65B",
     fontWeight: "700",
     textDecorationLine: "underline",
   },

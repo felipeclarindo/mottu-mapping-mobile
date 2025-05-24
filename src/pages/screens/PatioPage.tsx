@@ -18,7 +18,7 @@ const motos: Moto[] = [
   {
     id: "M2",
     setorName: "Em Manutenção",
-    setorDescription: "Em manutenção",
+    setorDescription: "Motos pronta ser retirada",
     setorColorRgb: "#FFA500",
     plate: "DAC1263",
     setorId: "2",
@@ -26,7 +26,7 @@ const motos: Moto[] = [
   {
     id: "M3",
     setorName: "Pronta",
-    setorDescription: "Pronta para uso",
+    setorDescription: "",
     setorColorRgb: "#0000FF",
     plate: "DAC1534",
     setorId: "3",
@@ -34,7 +34,7 @@ const motos: Moto[] = [
   {
     id: "M4",
     setorName: "OK",
-    setorDescription: "OK",
+    setorDescription: "Motos em boas condições",
     setorColorRgb: "#00FF00",
     plate: "ADA123",
     setorId: "1",
@@ -42,7 +42,7 @@ const motos: Moto[] = [
   {
     id: "M5",
     setorName: "Em Manutenção",
-    setorDescription: "Em manutenção",
+    setorDescription: "Motos com problemas técnicos",
     setorColorRgb: "#FFA500",
     plate: "ADA1313",
     setorId: "2",
@@ -50,15 +50,15 @@ const motos: Moto[] = [
   {
     id: "M6",
     setorName: "Pronta",
-    setorDescription: "Pronta para uso",
+    setorDescription: "Motos pronta ser retirada",
     setorColorRgb: "#0000FF",
-    plate: "Azul",
+    plate: "ADA1313",
     setorId: "3",
   },
   {
     id: "M7",
     setorName: "OK",
-    setorDescription: "OK",
+    setorDescription: "Motos em boas condições",
     setorColorRgb: "#00FF00",
     plate: "ASG1241",
     setorId: "1",
@@ -66,18 +66,10 @@ const motos: Moto[] = [
   {
     id: "M8",
     setorName: "Em Manutenção",
-    setorDescription: "Em manutenção",
+    setorDescription: "Motos com problemas técnicos",
     setorColorRgb: "#FFA500",
     plate: "ADS5113",
     setorId: "2",
-  },
-  {
-    id: "M9",
-    setorName: "Pronta",
-    setorDescription: "Pronta para uso",
-    setorColorRgb: "#0000FF",
-    plate: "ASG1241",
-    setorId: "3",
   },
 ];
 
@@ -95,17 +87,8 @@ const PatioPage = () => {
         data={motos}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.content}
-        renderItem={({ item }) => (
-          <MotoCard
-            id={item.id}
-            setorName={item.setorName}
-            setorDescription={item.setorDescription}
-            setorColorRgb={item.setorColorRgb}
-            setorId={item.setorId}
-          />
-        )}
+        renderItem={({ item }) => <MotoCard {...item} />}
       />
 
       <Footer />
@@ -119,11 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#121212",
   },
   content: {
-    padding: 20,
-  },
-  row: {
-    justifyContent: "space-between",
-    marginBottom: 12,
+    padding: 16,
   },
 });
 
