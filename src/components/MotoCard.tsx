@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { Moto } from "../types";
 
 interface MotoCardProps extends Moto {}
@@ -14,8 +14,14 @@ const MotoCard = ({
 }: MotoCardProps) => {
   return (
     <View style={styles.card}>
+      <Image
+        source={require("../assets/moto.png")}
+        style={styles.image}
+        resizeMode="cover"
+      />
       <Text style={styles.title}>{setorName}</Text>
       <Text style={styles.subtitle}>{setorDescription}</Text>
+
       <View style={styles.infoRow}>
         <Text style={styles.label}>ID:</Text>
         <Text style={styles.value}>{id}</Text>
@@ -25,14 +31,14 @@ const MotoCard = ({
         <Text style={styles.value}>{setorId}</Text>
       </View>
       <View style={styles.infoRow}>
-        <Text style={styles.label}>Cor do Setor: </Text>
+        <Text style={styles.label}>Cor do Setor:</Text>
         <View
-          style={
-            (styles.value,
-            styles.colorSquare,
-            { backgroundColor: setorColorRgb })
-          }
+          style={[styles.colorSquare, { backgroundColor: setorColorRgb }]}
         />
+      </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Placa:</Text>
+        <Text style={styles.value}>{plate}</Text>
       </View>
     </View>
   );
@@ -42,10 +48,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#1F1F1F",
     borderRadius: 12,
-    padding: 16,
-    width: "45%",
-    minWidth: 160,
-    margin: 8,
+    padding: 12,
+    width: "47%",
+    marginBottom: 16,
+    marginHorizontal: "1.5%",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -53,17 +59,23 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  colorSquare: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
+  image: {
+    width: "100%",
+    height: 280,
+    borderRadius: 8,
     marginBottom: 12,
+  },
+  colorSquare: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    marginLeft: 8,
   },
   title: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#A3E635",
-    marginBottom: 4,
+    color: "#54C65B",
+    marginBottom: 2,
   },
   subtitle: {
     fontSize: 14,
@@ -75,6 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 6,
   },
   label: {

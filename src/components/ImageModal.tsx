@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#A3E635",
+    color: "#54C65B",
   },
   modalImage: {
     width: "100%",
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   downloadButton: {
-    backgroundColor: "#A3E635",
+    backgroundColor: "#54C65B",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
