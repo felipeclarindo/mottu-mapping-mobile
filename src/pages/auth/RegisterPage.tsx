@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from "react-native";
 
 const RegisterPage = ({ navigation }: any) => {
@@ -23,6 +24,12 @@ const RegisterPage = ({ navigation }: any) => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <Image
+          source={require("../../assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+
         <Text style={styles.title}>Criar Conta</Text>
 
         <TextInput
@@ -65,7 +72,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#121212",
   },
   content: {
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 45,
     flexGrow: 1,
     justifyContent: "center",
   },
@@ -107,6 +115,12 @@ const styles = StyleSheet.create({
     color: "#54C65B",
     fontWeight: "700",
     textDecorationLine: "underline",
+  },
+  logo: {
+    width: 250,
+    height: 200,
+    alignSelf: "center",
+    marginBottom: 40,
   },
 });
 

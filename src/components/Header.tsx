@@ -21,7 +21,7 @@ const Header = ({ title, onMenuPress }: HeaderProps) => {
         {title}
       </Text>
       <Image
-        source={require("../assets/logo.png")}
+        source={require("../assets/favicon.png")}
         style={styles.logo}
         resizeMode="contain"
       />

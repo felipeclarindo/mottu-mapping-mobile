@@ -67,9 +67,6 @@ const HomePage = () => {
 
   const handleCloseModal = () => {
     setModalVisible(false);
-    setTimeout(() => {
-      setShowRelatorioButtons(false);
-    }, 15000);
   };
   const handleRedirectToPatio = () => navigation.navigate("patio");
   const handleRedirectToReport = () => navigation.navigate("report");

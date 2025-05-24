@@ -10,7 +10,7 @@ export default function CustomDrawerContent(props: any) {
     <DrawerContentScrollView {...props} style={styles.drawerContent}>
       <View style={styles.header}>
         <Image
-          source={require("../assets/favicon.png")}
+          source={require("../assets/logo.png")}
           style={styles.logo}
           resizeMode="cover"
         />

@@ -6,6 +6,7 @@ export type DrawerParamList = {
   patio: PatioScreenNavigationProp;
   report: ReportScreenNavigationProp;
   account: AccountScreenNavigationProp;
+  login: LoginScreenNavigationProp;
 };
 
 export type HomeScreenNavigationProp = DrawerNavigationProp<
@@ -28,9 +29,14 @@ export type PatioScreenNavigationProp = DrawerNavigationProp<
   "patio"
 >;
 
+export type RegisterScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  "register"
+>;
+
 export type AuthStackParamList = {
-  login: undefined;
-  register: undefined;
+  login: LoginScreenNavigationProp;
+  register: RegisterScreenNavigationProp;
   drawer: DrawerParamList;
 };
 

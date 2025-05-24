@@ -8,10 +8,12 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { LoginScreenNavigationProp } from "../../types/navigation";
+import Separator from "../../components/ui/Separator";
 
 const LoginPage = () => {
   const [user, setUser] = useState("");
@@ -42,6 +44,12 @@ const LoginPage = () => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <Image
+          source={require("../../assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+
         <Text style={styles.title}>Login</Text>
 
         <TextInput
@@ -82,7 +90,12 @@ const LoginPage = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#121212" },
-  content: { padding: 20, flexGrow: 1, justifyContent: "center" },
+  content: {
+    paddingVertical: 10,
+    paddingHorizontal: 45,
+    flexGrow: 1,
+    justifyContent: "center",
+  },
   title: {
     fontSize: 28,
     fontWeight: "700",
@@ -113,6 +126,12 @@ const styles = StyleSheet.create({
     color: "#54C65B",
     fontWeight: "700",
     textDecorationLine: "underline",
+  },
+  logo: {
+    width: 250,
+    height: 200,
+    alignSelf: "center",
+    marginBottom: 40,
   },
 });
 

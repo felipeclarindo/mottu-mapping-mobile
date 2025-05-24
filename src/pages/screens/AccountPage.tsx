@@ -44,19 +44,19 @@ const AccountPage = () => {
       {
         text: "Sair",
         style: "destructive",
-        onPress: () => {
-          const logout = async () => {
+        onPress: async () => {
+          try {
             await AsyncStorage.removeItem("user");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "login" as never }],
-            });
-          };
-          logout();
+            navigation.navigate("login");
+          } catch (error) {
+            console.error("Erro ao sair da conta:", error);
+            Alert.alert("Erro", "Não foi possível sair da conta.");
+          }
         },
       },
     ]);
   };
+
   const handleEditAccount = () => {
     Alert.alert("Editar Conta", "Funcionalidade ainda não implementada.");
   };
