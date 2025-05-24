@@ -1,24 +1,10 @@
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { ImageSourcePropType } from "react-native";
-
-export type DrawerParamList = {
-  home: undefined;
-  patio: undefined;
-  report: undefined;
-  login: undefined;
-};
 
 export type UserProps = {
   user: string;
   email: string;
   senha?: string;
 };
-
-export type HomeScreenNavigationProp = DrawerNavigationProp<
-  DrawerParamList,
-  "home"
->;
-
 export type Moto = {
   id: string;
   setorDescription: string;
@@ -38,4 +24,9 @@ export type DashboardCardProps = {
   stats: {
     [key: string]: number;
   };
+};
+
+export type HeaderComponentProps = {
+  title: string;
+  navigation: any;
 };
