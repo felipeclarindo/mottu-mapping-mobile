@@ -24,45 +24,57 @@ Aplicativo mobile para gerar relatórios e controlar o estoque usando visão com
 
 ## Passos para instalação e execução
 
-1. Clone o repositório:
+1. Clone o repositório da api:
+
+```bash
+git clone https://github.com/felipeclarindo/mottu-mapping-api-dotnet.git
+```
+
+2. Siga as intruções para executar no `Readme.md` da api.
+
+3. Clone o repositório:
 
 ```bash
 git clone https://github.com/felipeclarindo/mottu-mapping-mobile.git
 ```
 
-2. Entre no diretório:
+4. Entre no diretório:
 
 ```bash
 cd mottu-mapping-mobile
 ```
 
-3. Instale as dependências:
+5. Instale as dependências:
 
 ```bash
 npm install
 ```
 
-4. Certifique-se de ter um dispositivo android para visualizar o app(emulador ou via depuracao).
+6. Certifique-se de ter um dispositivo android para visualizar o app(emulador ou via depuracao).
 
-5. Execute o app:
+7. Execute o app:
 
 ```bash
 npx expo start
 ```
 
-6. Pressione `A` para abrir o aplicativo no android.
+8. Pressione `A` para abrir o aplicativo no android.
+
+**OBS: VOCÊ PRECISA SE CERTIFICAR DE TER O EMULADOR DO ANDROID OU ENTÃO CONECTAR O SEU CELULAR NO PC.**
 
 ## Contribuição
 
 Contribuições são bem-vindas! Se você tiver sugestões de melhorias, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
-## Autor
+## Time
 
 ### **Felipe Clarindo**
 
-- [LinkedIn](https://www.linkedin.com/in/felipeclarindo)
-- [Instagram](https://www.instagram.com/lipethecoder)
-- [GitHub](https://github.com/felipeclarindo)
+- RM: 554547
+
+### **André Marcolongo**
+
+- RM: 555285
 
 ## Licença
 

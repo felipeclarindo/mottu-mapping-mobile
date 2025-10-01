@@ -35,3 +35,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Makdowns
+README.pt-BR backup.md
+README backup.md

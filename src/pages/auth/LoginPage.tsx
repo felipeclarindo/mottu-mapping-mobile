@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   TextInput,
@@ -9,29 +9,76 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { LoginScreenNavigationProp } from "../../types/navigation";
-import Separator from "../../components/ui/Separator";
+import { login, getCurrentUser } from "../../services/authService";
 
 const LoginPage = () => {
-  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
+  // Verifica se já existe usuário logado
+  useEffect(() => {
+    const checkUser = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        navigation.navigate("drawer"); // já logado
+      }
+    };
+    checkUser();
+  }, []);
+
   const handleLogin = async () => {
-    if (!user || !password) {
-      Alert.alert("Atenção", "Preencha e-mail e senha.");
+    if (!email || !password) {
+      Alert.alert("Campos Obrigatórios", "Preencha seu e-mail e senha.");
       return;
     }
-    const userData = { user, email: "teste@gmail.com" };
+
+    if (password.length < 6) {
+      Alert.alert(
+        "Senha Inválida",
+        "A senha deve ter pelo menos 6 caracteres."
+      );
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      await AsyncStorage.setItem("user", JSON.stringify(userData));
+      await login(email, password);
+      Alert.alert("Bem-vindo!", "Login realizado com sucesso!");
+      setEmail("");
+      setPassword("");
       navigation.navigate("drawer");
-    } catch (err) {
-      Alert.alert("Erro", "Não foi possível realizar o login.");
-      console.error(err);
+    } catch (error: any) {
+      console.error("Erro no login:", error.code || error.message);
+      let message = "Não foi possível realizar o login.";
+
+      switch (error.code) {
+        case "auth/invalid-email":
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          message = "E-mail ou senha incorretos.";
+          break;
+        case "auth/user-disabled":
+          message = "Sua conta foi desativada.";
+          break;
+        case "auth/too-many-requests":
+          message = "Muitas tentativas de login. Tente mais tarde.";
+          break;
+        case "auth/network-request-failed":
+          message = "Erro de conexão. Verifique sua internet.";
+          break;
+      }
+
+      Alert.alert("Erro de Login", message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,13 +100,14 @@ const LoginPage = () => {
         <Text style={styles.title}>Login</Text>
 
         <TextInput
-          placeholder="Usuário"
+          placeholder="E-mail"
           placeholderTextColor="#888"
           style={styles.input}
-          keyboardType="default"
-          autoCapitalize="words"
-          value={user}
-          onChangeText={setUser}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+          editable={!loading}
         />
         <TextInput
           placeholder="Senha"
@@ -68,10 +116,19 @@ const LoginPage = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          editable={!loading}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity
+          style={[styles.button, loading && { opacity: 0.7 }]}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#121212" />
+          ) : (
+            <Text style={styles.buttonText}>Entrar</Text>
+          )}
         </TouchableOpacity>
 
         <Text style={styles.footerText}>
@@ -127,12 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textDecorationLine: "underline",
   },
-  logo: {
-    width: 250,
-    height: 200,
-    alignSelf: "center",
-    marginBottom: 40,
-  },
+  logo: { width: 250, height: 200, alignSelf: "center", marginBottom: 40 },
 });
 
 export default LoginPage;

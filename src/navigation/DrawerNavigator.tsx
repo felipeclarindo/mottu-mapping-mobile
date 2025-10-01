@@ -2,11 +2,12 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Feather } from "@expo/vector-icons";
 
-import HomePage from "../pages/screens/HomePage";
-import PatioPage from "../pages/screens/PatioPage";
-import ReportPage from "../pages/screens/ReportPage";
-import AccountPage from "../pages/screens/AccountPage";
+import HomePage from "../pages/pages/HomePage";
+import PatioPage from "../pages/pages/PatioPage";
+import ReportPage from "../pages/pages/ReportPage";
+import AccountPage from "../pages/pages/AccountPage";
 import CustomDrawerContent from "./CustomDrawerContent";
+import LoginPage from "../pages/auth/LoginPage";
 
 const Drawer = createDrawerNavigator();
 

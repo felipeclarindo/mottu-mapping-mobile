@@ -35,12 +35,30 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [imagemSource, setImagemSource] = useState<number | null>(null);
   const [user, setUser] = useState<UserProps | null>(null);
+
+  // Variável de estado para o nome a ser exibido (ajuste aqui!)
+  const [displayName, setDisplayName] = useState<string>("");
+
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
+  // Lógica de carregamento do usuário e extração do nome
   const loadUser = useCallback(async () => {
     try {
       const json = await AsyncStorage.getItem("user");
-      if (json) setUser(JSON.parse(json));
+      if (json) {
+        const userData = JSON.parse(json);
+        setUser(userData);
+
+        // 🚀 LÓGICA DE EXIBIÇÃO APRIMORADA:
+        // Tenta usar: 1. user.name, 2. user.displayName, 3. Primeira parte do e-mail.
+        const nameToDisplay =
+          userData.user?.name ||
+          userData.name ||
+          userData.user?.email?.split("@")[0] || // Extrai a parte antes do @
+          "Usuário"; // Fallback
+
+        setDisplayName(nameToDisplay);
+      }
     } catch (e) {
       console.error("Erro ao carregar usuário:", e);
     }
@@ -79,12 +97,13 @@ const HomePage = () => {
       />
 
       <ScrollView contentContainerStyle={styles.content}>
+        {/* 🚀 AJUSTE NA SAUDAÇÃO: Usa o estado 'displayName' */}
         <Text style={styles.title}>
-          Bem-vindo{user ? `, ${user.user}` : ""}!
+          Bem-vindo{displayName ? `, ${displayName}` : ""}!
         </Text>
 
         <Text style={styles.subtitle}>Dashboard de Mapeamento</Text>
-
+        {/* ... Restante do BarChart ... */}
         <BarChart
           data={{ labels, datasets: [{ data: values }] }}
           width={Dimensions.get("window").width - 40}
@@ -99,7 +118,7 @@ const HomePage = () => {
         <Separator />
 
         <DashboardCard stats={stats} />
-
+        {/* ... Restante do código permanece inalterado ... */}
         <Text style={styles.subtitle}>
           Acompanhe as motos no pátio e gere relatórios em tempo real.
         </Text>
@@ -156,6 +175,7 @@ const HomePage = () => {
   );
 };
 
+// ... estilos (styles) permanecem inalterados ...
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#121212" },
   content: { padding: 20 },

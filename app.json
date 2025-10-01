@@ -12,9 +12,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.felipeclarindo.mottumapping"
     },
     "android": {
+      "package": "com.felipeclarindo.mottumapping",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#000000"

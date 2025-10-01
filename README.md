@@ -1,4 +1,4 @@
- 🌍 [Leia em Português](README.pt-BR.md)
+🌍 [Leia em Português](README.pt-BR.md)
 
 # Mottu Mapping Mobile
 
@@ -24,45 +24,57 @@ Mobile Application to get reports and can make the stock using a vision computat
 
 ## Steps to install and run
 
-1. Clone the Repository:
+1. Clone the api repository:
+
+```bash
+git clone https://github.com/felipeclarindo/mottu-mapping-api-dotnet.git
+```
+
+2. Follow the instructions in the api `Readme.md` to run the api.
+
+3. Clone the Repository:
 
 ```bash
 git clone https://github.com/felipeclarindo/mottu-mapping-mobile.git
 ```
 
-2. Enter directory:
+4. Enter directory:
 
 ```bash
 cd mottu-mapping-mobile
 ```
 
-3. Install dependencies :
+5. Install dependencies :
 
 ```bash
 npm install
 ```
 
-4. Make sure you have an android device to view the app(emulator or via debugging).
+6. Make sure you have an android device to view the app(emulator or via debugging).
 
-5. Run the app
+7. Run the app
 
 ```bash
 npx expo start
 ```
 
-6. Press `A` to open the application in android.
+8. Press `A` to open the application in android.
+
+**OBS: YOU NEED HAVE AN EMULATOR IN YOU COMPUTER OR CONNECT THE PHONE IN THE COMPUTER!**
 
 ## Contribution
 
 Contributions are welcome! If you have suggestions for improvements, feel free to open an issue or submit a pull request.
 
-## Author
+## Team
 
 ### **Felipe Clarindo**
 
-- [LinkedIn](https://www.linkedin.com/in/felipeclarindo)
-- [Instagram](https://www.instagram.com/lipethecoder)
-- [GitHub](https://github.com/felipeclarindo)
+- RM: 554547
+
+### **André Marcolongo**
+
+- RM: 555285
 
 ## License
 
