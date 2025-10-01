@@ -70,11 +70,11 @@ Contributions are welcome! If you have suggestions for improvements, feel free t
 
 ### **Felipe Clarindo**
 
-- RM: 554547
+- RM: 554547, 2TDSPF
 
-### **André Marcolongo**
+### **André Marcolongo - andremarko no Github**
 
-- RM: 555285
+- RM: 555285, 2TDPSV
 
 ## License
 
