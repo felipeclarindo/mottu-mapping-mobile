@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import { generateCompleteReport } from "../../utils";
+import { generateCompleteReport } from "../utils";
 
 const ReportPage = () => {
   const relatorioCompleto = generateCompleteReport();

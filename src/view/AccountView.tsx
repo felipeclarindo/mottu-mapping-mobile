@@ -8,11 +8,11 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { UserProps } from "../../types";
-import { AccountScreenNavigationProp } from "../../types/navigation";
+import { AccountScreenNavigationProp } from "../model/navigation";
 
 const AccountPage = () => {
   const [user, setUser] = useState<UserProps | null>(null);

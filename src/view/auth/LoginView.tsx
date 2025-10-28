@@ -12,8 +12,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LoginScreenNavigationProp } from "../../types/navigation";
-import { login, getCurrentUser } from "../../services/authService";
+import { LoginScreenNavigationProp } from "../../model/navigation";
+import { login, getCurrentUser } from "../../service/authService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

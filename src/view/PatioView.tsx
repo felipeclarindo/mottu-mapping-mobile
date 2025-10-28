@@ -6,9 +6,9 @@ import {
   ActivityIndicator,
   Text,
 } from "react-native";
-import MotoCard from "../../components/MotoCard";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import MotoCard from "../components/MotoCard";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { Moto } from "../../types";
 

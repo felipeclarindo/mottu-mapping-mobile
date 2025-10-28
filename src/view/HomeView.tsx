@@ -10,15 +10,15 @@ import {
   Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ImageModal from "../../components/ImageModal";
+import ImageModal from "../components/ImageModal";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { BarChart } from "react-native-chart-kit";
-import Separator from "../../components/ui/Separator";
+import Separator from "../components/ui/Separator";
 import { UserProps } from "../../types";
-import DashboardCard from "../../components/DashboardCard";
-import { HomeScreenNavigationProp } from "../../types/navigation";
+import DashboardCard from "../components/DashboardCard";
+import { HomeScreenNavigationProp } from "../model/navigation";
 
 const chartConfig = {
   backgroundGradientFrom: "#121212",

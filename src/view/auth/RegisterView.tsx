@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // <-- NOVO IMPORT
 // O updateUserName deve estar disponível no seu authService após o ajuste acima.
-import { register, updateUserName } from "../../services/authService"; // <-- IMPORT ATUALIZADO
+import { register, updateUserName } from "../../service/authService"; // <-- IMPORT ATUALIZADO
 
 const RegisterPage = ({ navigation }: any) => {
   const [name, setName] = useState("");
