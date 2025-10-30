@@ -1,26 +1,20 @@
-import { InferType, object, string, number } from 'yup';
+import { InferType, object, string, number } from "yup";
 
-// join entre moto, model, sector e patio (1L)
 const motoSchema = object({
-  id: string().required(),
-  plate: string().required('A placa é obrigatória'),
-  // modelName
-  model: string().required('O modelo é obrigatório'),
-  color: string().required('A cor é obrigatória'),
-  // sectorDescription
-  sectorName: string().required(),
-  // sectorColor
-  setorColorRgb: string().required(),
+  motorcycleId: number().nullable(),
+  plate: string().required("Plate is required"),
+  coordinates: string().required("Coordinates are required"),
+  modelId: number().required("Model is required"),
+  sectorId: number().required("Sector is required"),
 });
 
 type Moto = InferType<typeof motoSchema>;
 
 interface MotoError {
   plate?: string;
-  model?: string;
-  color?: string;
-  sectorName: string;
-  sectorColorRgb: string;
+  coordinates?: string;
+  modelId?: string;
+  sectorId?: string;
 }
 
-export { motoSchema, Moto, MotoError };
+export { motoSchema, type Moto, type MotoError };
