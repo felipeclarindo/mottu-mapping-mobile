@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
@@ -10,69 +10,15 @@ import MotoCard from "../components/MotoCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import { Moto } from "../../types";
+import useMotoControl from "../control/motoControl";
 
 const PatioPage = () => {
   const navigation = useNavigation();
+  const { motos, loading, error, loadMotos } = useMotoControl();
 
-  const [motos, setMotos] = useState<Moto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const API_URL = process.env.EXPO_PUBLIC_DEV_API_URL;
-
-  useEffect(() => {
-    const fetchMotos = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        if (!API_URL) {
-          throw new Error("URL da API não configurada (EXPO_PUBLIC_API_URL).");
-        }
-
-        const response = await fetch(`${API_URL}/motos`);
-        if (!response.ok) {
-          throw new Error(
-            `Erro ${response.status}: Não foi possível buscar motos`
-          );
-        }
-
-        const data = await response.json();
-
-        const motosArray = Array.isArray(data) ? data : data.motos;
-
-        if (!Array.isArray(motosArray)) {
-          throw new Error("Formato de dados inválido recebido da API");
-        }
-
-        const formattedMotos: Moto[] = motosArray.map(
-          (item: any, index: number) => ({
-            id: String(item.id || index + 1),
-            plate: item.plate || `MOCK-PLATE-${index + 1}`,
-            sectorId: item.sectorId || 1,
-            model: item.model || "Modelo Mock",
-            color: item.color || "Preto",
-            ownerName: item.ownerName || "Proprietário desconhecido",
-            setorDescription:
-              item.setorDescription || "Descrição não informada pelo setor.",
-            setorName: item.setorName || "Setor Desconhecido",
-            setorColorRgb: item.setorColorRgb || "#000000",
-            setorId: item.setorId || 1,
-          })
-        );
-
-        setMotos(formattedMotos);
-      } catch (err: any) {
-        console.error("Erro ao buscar motos:", err);
-        setError(err.message || "Erro inesperado ao buscar motos.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMotos();
-  }, [API_URL]);
+  React.useEffect(() => {
+    loadMotos(1);
+  }, [loadMotos]);
 
   return (
     <View style={styles.container}>
@@ -97,7 +43,7 @@ const PatioPage = () => {
       {!loading && !error && motos.length > 0 && (
         <FlatList
           data={motos}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item.motorcycleId)}
           numColumns={2}
           contentContainerStyle={styles.content}
           renderItem={({ item }) => <MotoCard {...item} />}
