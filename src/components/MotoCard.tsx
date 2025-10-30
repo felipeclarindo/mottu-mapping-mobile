@@ -1,17 +1,7 @@
-import React from "react";
+import {React }from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Moto } from "../types";
 
-interface MotoCardProps extends Moto {}
-
-const MotoCard = ({
-  id,
-  plate,
-  setorDescription,
-  setorName,
-  setorColorRgb,
-  setorId,
-}: MotoCardProps) => {
+const MotoCard = ({ motorcycleId, plate, sector }: any) => {
   return (
     <View style={styles.card}>
       <Image
@@ -19,21 +9,21 @@ const MotoCard = ({
         style={styles.image}
         resizeMode="cover"
       />
-      <Text style={styles.title}>{setorName}</Text>
-      <Text style={styles.subtitle}>{setorDescription}</Text>
+      <Text style={styles.title}>{sector?.name}</Text>
+      <Text style={styles.subtitle}>{sector?.description}</Text>
 
       <View style={styles.infoRow}>
         <Text style={styles.label}>ID:</Text>
-        <Text style={styles.value}>{id}</Text>
+        <Text style={styles.value}>{motorcycleId}</Text>
       </View>
       <View style={styles.infoRow}>
         <Text style={styles.label}>Setor ID:</Text>
-        <Text style={styles.value}>{setorId}</Text>
+        <Text style={styles.value}>{sector?.sectorId}</Text>
       </View>
       <View style={styles.infoRow}>
         <Text style={styles.label}>Cor do Setor:</Text>
         <View
-          style={[styles.colorSquare, { backgroundColor: setorColorRgb }]}
+          style={[styles.colorSquare, { backgroundColor: sector?.colorRgb }]}
         />
       </View>
       <View style={styles.infoRow}>
