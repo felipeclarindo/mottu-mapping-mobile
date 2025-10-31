@@ -2,12 +2,12 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Feather } from "@expo/vector-icons";
 
-import HomePage from "../pages/pages/HomePage";
-import PatioPage from "../pages/pages/PatioPage";
-import ReportPage from "../pages/pages/ReportPage";
-import AccountPage from "../pages/pages/AccountPage";
+import HomeView from "../view/HomeView";
+import PatioView from "../view/PatioView";
+import ReportView from "../view/ReportView";
+import AccountView from "../view/AccountView";
+import LoginView from "../view/auth/LoginView";
 import CustomDrawerContent from "./CustomDrawerContent";
-import LoginPage from "../pages/auth/LoginPage";
 
 const Drawer = createDrawerNavigator();
 
@@ -33,7 +33,7 @@ export default function DrawerNavigator() {
     >
       <Drawer.Screen
         name="home"
-        component={HomePage}
+        component={HomeView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
@@ -43,7 +43,7 @@ export default function DrawerNavigator() {
       />
       <Drawer.Screen
         name="patio"
-        component={PatioPage}
+        component={PatioView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="map" size={size} color={color} />
@@ -53,7 +53,7 @@ export default function DrawerNavigator() {
       />
       <Drawer.Screen
         name="report"
-        component={ReportPage}
+        component={ReportView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="file-text" size={size} color={color} />
@@ -63,7 +63,7 @@ export default function DrawerNavigator() {
       />
       <Drawer.Screen
         name="account"
-        component={AccountPage}
+        component={AccountView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />

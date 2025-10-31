@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LoginScreenNavigationProp } from "../../model/navigation";
-import { login, getCurrentUser } from "../../service/authService";
+// import { login, getCurrentUser } from "../../service/authService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -23,15 +23,15 @@ const LoginPage = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
   // Verifica se já existe usuário logado
-  useEffect(() => {
-    const checkUser = async () => {
-      const user = await getCurrentUser();
-      if (user) {
-        navigation.navigate("drawer"); // já logado
-      }
-    };
-    checkUser();
-  }, []);
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     const user = await getCurrentUser();
+  //     if (user) {
+  //       navigation.navigate("drawer"); // já logado
+  //     }
+  //   };
+  //   checkUser();
+  // }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {

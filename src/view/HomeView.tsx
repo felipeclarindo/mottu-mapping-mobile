@@ -16,9 +16,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { BarChart } from "react-native-chart-kit";
 import Separator from "../components/ui/Separator";
-import { UserProps } from "../../types";
 import DashboardCard from "../components/DashboardCard";
 import { HomeScreenNavigationProp } from "../model/navigation";
+import { User } from "../model/UserModel";
 
 const chartConfig = {
   backgroundGradientFrom: "#121212",
@@ -34,7 +34,7 @@ const HomePage = () => {
   const [showRelatorioButtons, setShowRelatorioButtons] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imagemSource, setImagemSource] = useState<number | null>(null);
-  const [user, setUser] = useState<UserProps | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   // Variável de estado para o nome a ser exibido (ajuste aqui!)
   const [displayName, setDisplayName] = useState<string>("");
@@ -76,7 +76,7 @@ const HomePage = () => {
     setLoading(true);
     setShowRelatorioButtons(false);
     setTimeout(() => {
-      setImagemSource(require("../../assets/patio.png"));
+      setImagemSource(require("../assets/patio.png"));
       setShowRelatorioButtons(true);
       setLoading(false);
       setModalVisible(true);
