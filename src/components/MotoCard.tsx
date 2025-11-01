@@ -1,7 +1,7 @@
-import {React }from "react";
+import { React }from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
-const MotoCard = ({ motorcycleId, plate, sector }: any) => {
+const MotoCard = ({ plate, sector, model }: any) => {
   return (
     <View style={styles.card}>
       <Image
@@ -9,16 +9,10 @@ const MotoCard = ({ motorcycleId, plate, sector }: any) => {
         style={styles.image}
         resizeMode="cover"
       />
-      <Text style={styles.title}>{sector?.name}</Text>
-      <Text style={styles.subtitle}>{sector?.description}</Text>
-
+    
       <View style={styles.infoRow}>
-        <Text style={styles.label}>ID:</Text>
-        <Text style={styles.value}>{motorcycleId}</Text>
-      </View>
-      <View style={styles.infoRow}>
-        <Text style={styles.label}>Setor ID:</Text>
-        <Text style={styles.value}>{sector?.sectorId}</Text>
+        <Text style={styles.label}>Setor:</Text>
+        <Text style={styles.value}>{sector?.name}</Text>
       </View>
       <View style={styles.infoRow}>
         <Text style={styles.label}>Cor do Setor:</Text>
@@ -29,6 +23,10 @@ const MotoCard = ({ motorcycleId, plate, sector }: any) => {
       <View style={styles.infoRow}>
         <Text style={styles.label}>Placa:</Text>
         <Text style={styles.value}>{plate}</Text>
+      </View>
+           <View style={styles.infoRow}>
+        <Text style={styles.label}>Modelo:</Text>
+        <Text style={styles.value}>{model?.modelName}</Text>
       </View>
     </View>
   );

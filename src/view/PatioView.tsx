@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,9 @@ import {
   ActivityIndicator,
   Text,
 } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import MotoModal from "../components/MotoModal";
 import MotoCard from "../components/MotoCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -14,11 +17,24 @@ import useMotoControl from "../control/motoControl";
 
 const PatioPage = () => {
   const navigation = useNavigation();
-  const { motos, loading, error, loadMotos } = useMotoControl();
+  const { motos, loading, error, loadMotos, hasMore } = useMotoControl();
+  const [modalOpen, setModalOpen] = useState(false);
 
   React.useEffect(() => {
-    loadMotos(1);
-  }, [loadMotos]);
+    if (motos.length === 0) {
+      loadMotos(true);
+    }
+  }, []);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      loadMotos();
+    }
+  };
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSuccess = () => loadMotos(true);
 
   return (
     <View style={styles.container}>
@@ -47,6 +63,11 @@ const PatioPage = () => {
           numColumns={2}
           contentContainerStyle={styles.content}
           renderItem={({ item }) => <MotoCard {...item} />}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={
+            hasMore && loading ? <ActivityIndicator color="#54C65B" /> : null
+          }
         />
       )}
 
@@ -55,7 +76,18 @@ const PatioPage = () => {
           <Text style={styles.errorText}>Nenhuma moto encontrada.</Text>
         </View>
       )}
-
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={handleOpenModal}
+        activeOpacity={0.8}
+      >
+        <MaterialIcons name="add" size={32} color="#fff" />
+      </TouchableOpacity>
+      <MotoModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleSuccess}
+      />
       <Footer />
     </View>
   );
@@ -88,6 +120,23 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
     textAlign: "center",
+  },
+  fab: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    bottom: 96,
+    marginRight: 40,
+    backgroundColor: "#54C65B",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    zIndex: 10,
   },
 });
 

@@ -10,10 +10,11 @@ export const useMotoControl = () => {
   const [yardId, setYardId] = useState(null);
 
   const [motos, setMotos] = useState([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Monta o payload para criar/editar
   const getMotoPayload = () => ({
     plate,
     coordinates,
@@ -39,13 +40,18 @@ export const useMotoControl = () => {
     }
   };
 
-  const loadMotos = async (yardId) => {
+  const loadMotos = async (reset = false) => {
     setLoading(true);
     setError(null);
     try {
-      const list = await motoService.getAllMotos(yardId);
-      setMotos(list ?? []);
-      return list;
+      const currentPage = reset ? 0 : page;
+      const res = await motoService.getAllMotos(currentPage, 10);
+      if (res) {
+        setHasMore(!res.last);
+        setPage(res.number + 1);
+        setMotos((prev) => (reset ? res.content : [...prev, ...res.content]));
+      }
+      return res;
     } catch (e) {
       setError(e?.message || "Error loading motos");
       throw e;
@@ -88,6 +94,20 @@ export const useMotoControl = () => {
     }
   };
 
+  const countMotosBySector = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const counts = await motoService.countMotosBySector();
+      return counts;
+    } catch (e) {
+      setError(e?.message || "Error fetching count motos by sector");
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearForm = () => {
     setMotorcycleId(null);
     setPlate("");
@@ -96,10 +116,6 @@ export const useMotoControl = () => {
     setSectorId(null);
     setYardId(null);
   };
-
-  useEffect(() => {
-    loadMotos(1).catch(() => {});
-  }, []);
 
   return {
     motorcycleId,
@@ -122,6 +138,9 @@ export const useMotoControl = () => {
     deleteMoto,
     updateMoto,
     clearForm,
+    countMotosBySector,
+    hasMore,
+    page,
   };
 };
 

@@ -1,12 +1,20 @@
 import { mottuMappingApi } from "./api";
+import { MotoPage, MotoResponse, CountSectorDTO } from "../model/MotoModel";
 
-// Buscar motos de um pátio específico (yardId)
-export const fetchMotos = async (yardId) => {
+export const fetchMotos = async (
+  page = 0,
+  size = 10
+): Promise<MotoPage | null> => {
   try {
-    const response = await mottuMappingApi.get(`/motos/yard/${yardId}`);
-    return response.data ?? [];
-  } catch (error) {
-    console.error("Error fetching motos:", error);
+    const response = await mottuMappingApi.get<MotoPage>(
+      `/motos?page=${page}&size=${size}&sort=plate,asc`
+    );
+    return response.data ?? null;
+  } catch (error: any) {
+    console.error(
+      "[fetchMotos] Erro ao buscar motos:",
+      error?.response?.data || error
+    );
     return null;
   }
 };
@@ -51,5 +59,19 @@ export const deleteMoto = async (motorcycleId) => {
   } catch (error) {
     console.error("Error deleting moto:", error);
     return false;
+  }
+};
+
+export const fetchCountMotosBySector = async (): Promise<
+  CountSectorDTO[] | null
+> => {
+  try {
+    const response = await mottuMappingApi.get<CountSectorDTO[]>(
+      "/motos/count-motos-by-sector"
+    );
+    return response.data ?? [];
+  } catch (error) {
+    console.error("Error fetching count motos by sector:", error);
+    return null;
   }
 };
