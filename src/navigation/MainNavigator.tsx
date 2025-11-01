@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./AuthStack";
 import DrawerNavigator from "./DrawerNavigator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { ActivityIndicator, View } from "react-native";
 
 export default function MainNavigator() {
@@ -10,12 +10,8 @@ export default function MainNavigator() {
   const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
-    const checkLogin = async () => {
-      const user = await AsyncStorage.getItem("user");
-      setIsLogged(!!user);
-      setIsLoading(false);
-    };
-    checkLogin();
+    setIsLogged(false); 
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {

@@ -6,7 +6,6 @@ import HomeView from "../view/HomeView";
 import PatioView from "../view/PatioView";
 import ReportView from "../view/ReportView";
 import AccountView from "../view/AccountView";
-import LoginView from "../view/auth/LoginView";
 import CustomDrawerContent from "./CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();

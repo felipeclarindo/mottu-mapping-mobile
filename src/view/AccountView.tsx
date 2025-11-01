@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,54 +7,23 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { UserProps } from "../../types";
+import { User } from "../model/UserModel";
 import { AccountScreenNavigationProp } from "../model/navigation";
 
 const AccountPage = () => {
-  const [user, setUser] = useState<UserProps | null>(null);
+
+  const [user] = useState<User | null>(null);
   const navigation = useNavigation<AccountScreenNavigationProp>();
 
-  const loadUser = useCallback(async () => {
-    try {
-      const json = await AsyncStorage.getItem("user");
-      if (json) {
-        const parsed: UserProps = JSON.parse(json);
-        setUser(parsed);
-      }
-    } catch (error) {
-      console.error("Erro ao carregar usuário:", error);
-      Alert.alert("Erro", "Não foi possível carregar os dados do usuário.");
-    }
-  }, []);
-
-  useEffect(() => {
-    loadUser();
-  }, [loadUser]);
-
   const handleLogout = () => {
-    Alert.alert("Sair", "Deseja realmente sair?", [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-      {
-        text: "Sair",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await AsyncStorage.removeItem("user");
-            navigation.navigate("login");
-          } catch (error) {
-            console.error("Erro ao sair da conta:", error);
-            Alert.alert("Erro", "Não foi possível sair da conta.");
-          }
-        },
-      },
-    ]);
+    Alert.alert(
+      "Sair",
+      "Funcionalidade de logout será implementada pelo AuthContext."
+    );
   };
 
   const handleEditAccount = () => {
@@ -74,10 +43,7 @@ const AccountPage = () => {
         {user && (
           <View style={styles.card}>
             <Text style={styles.label}>Nome</Text>
-            <Text style={styles.value}>{user.user}</Text>
-
-            <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>{user.email}</Text>
+            <Text style={styles.value}>{user.username}</Text>
           </View>
         )}
 
