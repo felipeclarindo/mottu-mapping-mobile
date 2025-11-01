@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   TextInput,
@@ -12,73 +12,46 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LoginScreenNavigationProp } from "../../model/navigation";
-// import { login, getCurrentUser } from "../../service/authService";
+import { LoginScreenNavigationProp } from "../model/navigation";
+
+import { User } from "../model/UserModel";
+import { useUserControl } from "../control/userControl";
+import * as SecureStore from "expo-secure-store";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User>({
+    idUser: null,
+    username: "",
+    password: "",
+  });
+  const { login, loading, error } = useUserControl();
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  // Verifica se já existe usuário logado
-  // useEffect(() => {
-  //   const checkUser = async () => {
-  //     const user = await getCurrentUser();
-  //     if (user) {
-  //       navigation.navigate("drawer"); // já logado
-  //     }
-  //   };
-  //   checkUser();
-  // }, []);
-
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Campos Obrigatórios", "Preencha seu e-mail e senha.");
+    if (!user.username || !user.password) {
+      Alert.alert("Campos Obrigatórios", "Preencha seu usuário e senha.");
       return;
     }
-
-    if (password.length < 6) {
+    if (user.password.length < 6) {
       Alert.alert(
         "Senha Inválida",
         "A senha deve ter pelo menos 6 caracteres."
       );
       return;
     }
-
-    setLoading(true);
-
     try {
-      await login(email, password);
-      Alert.alert("Bem-vindo!", "Login realizado com sucesso!");
-      setEmail("");
-      setPassword("");
+      const resp = await login(user.username, user.password);
+      await SecureStore.setItemAsync("jwt_token", resp.token);
+      Alert.alert("Bem-vindo!", `Login realizado!`);
+      setUser({ idUser: null, username: "", password: "" });
       navigation.navigate("drawer");
-    } catch (error: any) {
-      console.error("Erro no login:", error.code || error.message);
-      let message = "Não foi possível realizar o login.";
-
-      switch (error.code) {
-        case "auth/invalid-email":
-        case "auth/user-not-found":
-        case "auth/wrong-password":
-          message = "E-mail ou senha incorretos.";
-          break;
-        case "auth/user-disabled":
-          message = "Sua conta foi desativada.";
-          break;
-        case "auth/too-many-requests":
-          message = "Muitas tentativas de login. Tente mais tarde.";
-          break;
-        case "auth/network-request-failed":
-          message = "Erro de conexão. Verifique sua internet.";
-          break;
-      }
-
+    } catch (e: any) {
+      let message =
+        typeof e === "string"
+          ? e
+          : e?.message || "Não foi possível realizar o login.";
       Alert.alert("Erro de Login", message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -100,13 +73,14 @@ const LoginPage = () => {
         <Text style={styles.title}>Login</Text>
 
         <TextInput
-          placeholder="E-mail"
+          placeholder="Usuário"
           placeholderTextColor="#888"
           style={styles.input}
-          keyboardType="email-address"
           autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
+          value={user.username}
+          onChangeText={(text) =>
+            setUser((prev) => ({ ...prev, username: text }))
+          }
           editable={!loading}
         />
         <TextInput
@@ -114,8 +88,10 @@ const LoginPage = () => {
           placeholderTextColor="#888"
           style={styles.input}
           secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          value={user.password}
+          onChangeText={(text) =>
+            setUser((prev) => ({ ...prev, password: text }))
+          }
           editable={!loading}
         />
 
