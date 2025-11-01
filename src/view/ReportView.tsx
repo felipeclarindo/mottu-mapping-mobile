@@ -13,22 +13,39 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { generateCompleteReport } from "../utils";
+import useMotoControl from "../control/motoControl";
 
 const ReportPage = () => {
-  const relatorioCompleto = generateCompleteReport();
   const navigation = useNavigation();
+  const { countMotosBySector } = useMotoControl();
+  const [sectorCounts, setSectorCounts] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [relatorioCompleto, setRelatorioCompleto] = React.useState("");
+
+  React.useEffect(() => {
+    setLoading(true);
+    setError(null);
+    countMotosBySector()
+      .then((data) => {
+        setSectorCounts(data ?? []);
+        setRelatorioCompleto(generateCompleteReport(data ?? []));
+      })
+      .catch((e) => setError(e?.message || "Erro ao gerar relatório"))
+      .finally(() => setLoading(false));
+  }, []);
 
   const shareReport = async () => {
     try {
-      const fileUri = `${FileSystem.cacheDirectory}relatorio_completo.txt`;
+      const fileUri = FileSystem.Paths.cache + "/relatorio_completo.txt";
       await FileSystem.writeAsStringAsync(fileUri, relatorioCompleto, {
-        encoding: FileSystem.EncodingType.UTF8,
+        encoding: "utf8",
       });
       await Sharing.shareAsync(fileUri, {
         mimeType: "text/plain",
         dialogTitle: "Compartilhar Relatório Completo",
       });
-    } catch (error: any) {
+    } catch (error) {
       Alert.alert(
         "Erro",
         `Não foi possível compartilhar o arquivo: ${error.message}`
@@ -44,10 +61,20 @@ const ReportPage = () => {
       />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Relatório Completo do Pátio</Text>
-        <View style={styles.card}>
-          <Text style={styles.relatorioTexto}>{relatorioCompleto}</Text>
-        </View>
-        <TouchableOpacity style={styles.button} onPress={shareReport}>
+        {loading ? (
+          <Text style={styles.relatorioTexto}>Carregando relatório...</Text>
+        ) : error ? (
+          <Text style={[styles.relatorioTexto, { color: "red" }]}>{error}</Text>
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.relatorioTexto}>{relatorioCompleto}</Text>
+          </View>
+        )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={shareReport}
+          disabled={loading || !!error}
+        >
           <Text style={styles.buttonText}>Compartilhar Relatório</Text>
         </TouchableOpacity>
       </ScrollView>
