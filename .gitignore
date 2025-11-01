@@ -39,3 +39,5 @@ yarn-error.*
 # Makdowns
 README.pt-BR backup.md
 README backup.md
+
+.env
