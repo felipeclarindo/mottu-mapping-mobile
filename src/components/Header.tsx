@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#2A2A2A",
     elevation: 12,
+    paddingTop: 48,
   },
   menuButton: {
     padding: 4,

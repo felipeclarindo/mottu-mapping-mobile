@@ -105,10 +105,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
+    width: "100%",
+    height: "100%",
   },
   loadingText: {
     color: "#FFF",
     marginTop: 10,
+    textAlign: "center",
+    width: "100%",
   },
   errorContainer: {
     flex: 1,

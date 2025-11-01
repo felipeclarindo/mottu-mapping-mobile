@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import AuthStack from "./AuthStack";
-import DrawerNavigator from "./DrawerNavigator";
-
 import { ActivityIndicator, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import DrawerNavigator from "./DrawerNavigator";
+import AuthStack from "./AuthStack";
 
 export default function MainNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
-    setIsLogged(false); 
+    setIsLogged(false);
     setIsLoading(false);
   }, []);
 
@@ -23,8 +23,11 @@ export default function MainNavigator() {
   }
 
   return (
-    <NavigationContainer>
-      {isLogged ? <DrawerNavigator /> : <AuthStack />}
-    </NavigationContainer>
+    <>
+      <StatusBar hidden />
+      <NavigationContainer>
+        {isLogged ? <DrawerNavigator /> : <AuthStack />}
+      </NavigationContainer>
+    </>
   );
 }
