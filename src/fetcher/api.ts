@@ -1,10 +1,8 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
-import Constants from "expo-constants";
-const API_URL = Constants.expoConfig?.extra?.API_URL || "";
 export const mottuMappingApi = axios.create({
-  baseURL: API_URL,
+  baseURL: "https://mottu-mapping-restful-4demo.onrender.com/",
 });
 
 mottuMappingApi.interceptors.request.use(async (config) => {

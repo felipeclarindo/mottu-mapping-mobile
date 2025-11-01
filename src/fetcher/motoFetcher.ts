@@ -7,7 +7,7 @@ export const fetchMotos = async (
 ): Promise<MotoPage | null> => {
   try {
     const response = await mottuMappingApi.get<MotoPage>(
-      `/motos?page=${page}&size=${size}&sort=plate,asc`
+      `/api/motos?page=${page}&size=${size}&sort=plate,asc`
     );
     return response.data ?? null;
   } catch (error: any) {
@@ -21,7 +21,7 @@ export const fetchMotos = async (
 
 export const fetchMotoById = async (motorcycleId) => {
   try {
-    const response = await mottuMappingApi.get(`/motos/${motorcycleId}`);
+    const response = await mottuMappingApi.get(`/api/motos/${motorcycleId}`);
     return response.data ?? null;
   } catch (error) {
     console.error("Error fetching moto by id:", error);
@@ -44,7 +44,7 @@ export const updateMoto = async (motorcycleId, payload) => {
 
 export const createMoto = async (payload) => {
   try {
-    const response = await mottuMappingApi.post("/motos", payload);
+    const response = await mottuMappingApi.post("/api/motos", payload);
     return response.data?.motorcycleId ?? null;
   } catch (error) {
     console.error("Error creating moto:", error);
@@ -54,7 +54,7 @@ export const createMoto = async (payload) => {
 
 export const deleteMoto = async (motorcycleId) => {
   try {
-    const response = await mottuMappingApi.delete(`/motos/${motorcycleId}`);
+    const response = await mottuMappingApi.delete(`/api/motos/${motorcycleId}`);
     return response.status === 200;
   } catch (error) {
     console.error("Error deleting moto:", error);
@@ -67,7 +67,7 @@ export const fetchCountMotosBySector = async (): Promise<
 > => {
   try {
     const response = await mottuMappingApi.get<CountSectorDTO[]>(
-      "/motos/count-motos-by-sector"
+      "/api/motos/count-motos-by-sector"
     );
     return response.data ?? [];
   } catch (error) {

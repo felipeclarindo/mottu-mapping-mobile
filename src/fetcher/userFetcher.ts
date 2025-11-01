@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LoginRequestDTO, LoginResponseDTO } from "../model/UserModel";
-import Constants from "expo-constants";
+import { mottuMappingApi } from "./api";
 
 export const loginUser = async (
   username: string,
@@ -8,9 +8,8 @@ export const loginUser = async (
 ): Promise<LoginResponseDTO> => {
   try {
     const payload: LoginRequestDTO = { username, password };
-    const API_URL = Constants.expoConfig?.extra?.API_URL || "";
-    const response = await axios.post<LoginResponseDTO>(
-      `${API_URL}/login`,
+    const response = await mottuMappingApi.post<LoginResponseDTO>(
+      `/login`,
       payload
     );
     return response.data;
