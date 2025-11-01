@@ -1,7 +1,7 @@
 import * as motoFetcher from "../fetcher/motoFetcher";
 export const motoService = {
-  getAllMotos: async (yardId) => {
-    return await motoFetcher.fetchMotos(yardId);
+  getAllMotos: async (page = 0, size = 10) => {
+    return await motoFetcher.fetchMotos(page, size);
   },
   getMoto: async (motorcycleId) => {
     return await motoFetcher.fetchMotoById(motorcycleId);
@@ -20,5 +20,8 @@ export const motoService = {
     const ok = await motoFetcher.deleteMoto(motorcycleId);
     if (!ok) throw new Error("failed to delete moto");
     return ok;
+  },
+  countMotosBySector: async () => {
+    return await motoFetcher.fetchCountMotosBySector();
   },
 };

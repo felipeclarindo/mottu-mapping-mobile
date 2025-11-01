@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -9,16 +10,15 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageModal from "../components/ImageModal";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { BarChart } from "react-native-chart-kit";
 import Separator from "../components/ui/Separator";
-import DashboardCard from "../components/DashboardCard";
 import { HomeScreenNavigationProp } from "../model/navigation";
-import { User } from "../model/UserModel";
+import { motoService } from "../service/motoService";
+import { CountSectorDTO } from "../model/MotoModel";
 
 const chartConfig = {
   backgroundGradientFrom: "#121212",
@@ -34,43 +34,27 @@ const HomePage = () => {
   const [showRelatorioButtons, setShowRelatorioButtons] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imagemSource, setImagemSource] = useState<number | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-
-  // Variável de estado para o nome a ser exibido (ajuste aqui!)
-  const [displayName, setDisplayName] = useState<string>("");
 
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  // Lógica de carregamento do usuário e extração do nome
-  const loadUser = useCallback(async () => {
-    try {
-      const json = await AsyncStorage.getItem("user");
-      if (json) {
-        const userData = JSON.parse(json);
-        setUser(userData);
+  const [sectorCounts, setSectorCounts] = useState<CountSectorDTO[]>([]);
+  const [sectorLoading, setSectorLoading] = useState(false);
+  const [sectorError, setSectorError] = useState<string | null>(null);
 
-        // 🚀 LÓGICA DE EXIBIÇÃO APRIMORADA:
-        // Tenta usar: 1. user.name, 2. user.displayName, 3. Primeira parte do e-mail.
-        const nameToDisplay =
-          userData.user?.name ||
-          userData.name ||
-          userData.user?.email?.split("@")[0] || // Extrai a parte antes do @
-          "Usuário"; // Fallback
+  useFocusEffect(
+    useCallback(() => {
+      setSectorLoading(true);
+      setSectorError(null);
+      motoService
+        .countMotosBySector()
+        .then((data) => setSectorCounts(data ?? []))
+        .catch((e) => setSectorError(e?.message || "Erro ao buscar setores"))
+        .finally(() => setSectorLoading(false));
+    }, [])
+  );
 
-        setDisplayName(nameToDisplay);
-      }
-    } catch (e) {
-      console.error("Erro ao carregar usuário:", e);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadUser();
-  }, [loadUser]);
-
-  const stats = { OK: 5, "Em Manutenção": 3, Pronta: 1 };
-  const labels = Object.keys(stats);
-  const values = Object.values(stats);
+  const labels = sectorCounts.map((s) => s.sectorName);
+  const values = sectorCounts.map((s) => s.motoCount);
 
   const showImage = () => {
     setLoading(true);
@@ -97,28 +81,73 @@ const HomePage = () => {
       />
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* 🚀 AJUSTE NA SAUDAÇÃO: Usa o estado 'displayName' */}
-        <Text style={styles.title}>
-          Bem-vindo{displayName ? `, ${displayName}` : ""}!
-        </Text>
+        <Text style={styles.title}>Bem-vindo!</Text>
 
-        <Text style={styles.subtitle}>Dashboard de Mapeamento</Text>
-        {/* ... Restante do BarChart ... */}
-        <BarChart
-          data={{ labels, datasets: [{ data: values }] }}
-          width={Dimensions.get("window").width - 40}
-          height={220}
-          chartConfig={chartConfig}
-          style={styles.chart}
-          fromZero
-          yAxisLabel=""
-          yAxisSuffix=""
-        />
+        <Text style={styles.subtitle}>Motos por Setor</Text>
+        {sectorLoading ? (
+          <ActivityIndicator color="#54C65B" style={{ marginVertical: 24 }} />
+        ) : sectorError ? (
+          <Text style={{ color: "#ff4444", textAlign: "center" }}>
+            {sectorError}
+          </Text>
+        ) : (
+          <>
+            <BarChart
+              data={{ labels, datasets: [{ data: values }] }}
+              width={Dimensions.get("window").width - 40}
+              height={220}
+              chartConfig={chartConfig}
+              style={styles.chart}
+              fromZero
+              yAxisLabel=""
+              yAxisSuffix=""
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                marginTop: 12,
+              }}
+            >
+              {sectorCounts.map((s) => (
+                <View
+                  key={s.sectorName}
+                  style={{
+                    backgroundColor: "#232",
+                    borderRadius: 8,
+                    padding: 12,
+                    margin: 6,
+                    minWidth: 100,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#C7D6B9",
+                      fontWeight: "bold",
+                      fontSize: 16,
+                    }}
+                  >
+                    {s.sectorName}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#54C65B",
+                      fontSize: 22,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {s.motoCount}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
 
         <Separator />
 
-        <DashboardCard stats={stats} />
-        {/* ... Restante do código permanece inalterado ... */}
         <Text style={styles.subtitle}>
           Acompanhe as motos no pátio e gere relatórios em tempo real.
         </Text>
@@ -175,7 +204,6 @@ const HomePage = () => {
   );
 };
 
-// ... estilos (styles) permanecem inalterados ...
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#121212" },
   content: { padding: 20 },

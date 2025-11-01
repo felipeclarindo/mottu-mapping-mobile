@@ -1,47 +1,36 @@
-export const generateReport = (): string => {
-  const relatorio = `
-    Relatório de Mapeamento do Pátio
-    Data: ${new Date().toLocaleString()}
-    Número total de motos: 15
-    Motos OK: 10
-    Motos em manutenção: 3
-    Motos prontas: 2
-    Observações: Pátio mapeado com sucesso.
-  `;
-  return relatorio;
+import { CountSectorDTO } from "../model/MotoModel";
+
+export const generateReport = (sectorCounts: CountSectorDTO[] = []): string => {
+  const totalMotos = sectorCounts.reduce(
+    (sum, s) => sum + (s.motoCount || 0),
+    0
+  );
+  const setores = sectorCounts
+    .map(
+      (s) =>
+        `  - ${s.sectorName}: ${s.motoCount} moto${
+          s.motoCount === 1 ? "" : "s"
+        }`
+    )
+    .join("\n");
+  return `Relatório de Mapeamento do Pátio\nData: ${new Date().toLocaleString()}\n\nNúmero total de motos: ${totalMotos}\n\nDetalhes por Setor:\n${setores}\n\nObservações: Pátio mapeado com sucesso.`;
 };
 
-export const generateCompleteReport = (): string => {
-  const relatorio = `
-    Relatório Completo de Mapeamento do Pátio
-    Data: ${new Date().toLocaleString()}
-
-    Informações Gerais
-    -------------------
-    Número total de motos: 20
-    Área total do pátio: 5000 m²
-    Capacidade máxima de motos: 25
-
-    Status das Motos
-    -------------------
-    Motos OK: 12
-    Motos em manutenção: 5
-    Motos prontas: 3
-
-    Detalhes por Setor
-    -------------------
-    Setor A: 
-      - Motos OK: 5
-      - Motos em manutenção: 2
-    Setor B:
-      - Motos OK: 7
-      - Motos em manutenção: 3
-      - Motos prontas: 3
-
-    Observações
-    ----------
-    Pátio mapeado com sucesso em 10/05/2024.
-    Próxima inspeção agendada para 17/05/2024.
-  `;
-  return relatorio;
+export const generateCompleteReport = (
+  sectorCounts: CountSectorDTO[] = [],
+  extra?: { area?: string; capacidade?: string }
+) => {
+  const totalMotos = sectorCounts.reduce(
+    (sum, s) => sum + (s.motoCount || 0),
+    0
+  );
+  const setores = sectorCounts
+    .map(
+      (s) =>
+        `  - ${s.sectorName}: ${s.motoCount} moto${
+          s.motoCount === 1 ? "" : "s"
+        }`
+    )
+    .join("\n");
+  return `Relatório Completo de Mapeamento do Pátio\nData: ${new Date().toLocaleString()}\n\nInformações Gerais\n-------------------\nNúmero total de motos: ${totalMotos}\nÁrea total do pátio: 1000 m²\nCapacidade máxima de motos: 500\n\nDetalhes por Setor\n-------------------\n${setores}\n\nObservações\n----------\nPátio mapeado com sucesso.`;
 };
