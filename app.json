@@ -24,6 +24,10 @@
     },
     "web": {
       "favicon": "./src/assets/logo.png"
+    },
+    "plugins": ["expo-secure-store"],
+    "extra": {
+      "API_URL": "https://mottu-mapping-restful-4demo.onrender.com/api"
     }
   }
 }
