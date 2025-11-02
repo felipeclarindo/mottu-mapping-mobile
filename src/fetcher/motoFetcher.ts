@@ -32,7 +32,7 @@ export const fetchMotoById = async (motorcycleId) => {
 export const updateMoto = async (motorcycleId, payload) => {
   try {
     const response = await mottuMappingApi.put(
-      `/motos/${motorcycleId}`,
+      `/api/motos/${motorcycleId}`,
       payload
     );
     return response.status === 200;
@@ -55,9 +55,9 @@ export const createMoto = async (payload) => {
 export const deleteMoto = async (motorcycleId) => {
   try {
     const response = await mottuMappingApi.delete(`/api/motos/${motorcycleId}`);
-    return response.status === 200;
+    return response.status === 200 || response.status === 204;
   } catch (error) {
-    console.error("Error deleting moto:", error);
+    console.error("Error deleting moto:", error?.response?.data || error);
     return false;
   }
 };
