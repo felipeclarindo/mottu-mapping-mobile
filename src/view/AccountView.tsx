@@ -11,23 +11,26 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { User } from "../model/UserModel";
 import { AccountScreenNavigationProp } from "../model/navigation";
+import { useAuth } from "../context/AuthContext";
+import { Image } from "react-native";
 
 const AccountPage = () => {
-
-  const [user] = useState<User | null>(null);
+  const { user, logout } = useAuth();
   const navigation = useNavigation<AccountScreenNavigationProp>();
 
   const handleLogout = () => {
-    Alert.alert(
-      "Sair",
-      "Funcionalidade de logout será implementada pelo AuthContext."
-    );
-  };
-
-  const handleEditAccount = () => {
-    Alert.alert("Editar Conta", "Funcionalidade ainda não implementada.");
+    Alert.alert("Sair", "Tem certeza que deseja sair?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Sair",
+        style: "destructive",
+        onPress: async () => {
+          await logout();
+          navigation.reset({ index: 0, routes: [{ name: "login" }] });
+        },
+      },
+    ]);
   };
 
   return (
@@ -36,26 +39,17 @@ const AccountPage = () => {
         title="Minha Conta"
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
-
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Informações da Conta</Text>
-
-        {user && (
-          <View style={styles.card}>
-            <Text style={styles.label}>Nome</Text>
-            <Text style={styles.value}>{user.username}</Text>
-          </View>
-        )}
-
+        <View style={styles.profileContainer}>
+          <Image
+            source={require("../assets/profile-generic.jpg")}
+            style={styles.profileImage}
+            resizeMode="cover"
+          />
+          <Text style={styles.profileName}>{user?.username || "Usuário"}</Text>
+        </View>
         <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={handleEditAccount}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.primaryButtonText}>Editar Conta</Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={handleLogout}
@@ -65,13 +59,29 @@ const AccountPage = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
       <Footer />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  profileContainer: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 12,
+    backgroundColor: "#333",
+  },
+  profileName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#54C65B",
+    marginBottom: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: "#121212",

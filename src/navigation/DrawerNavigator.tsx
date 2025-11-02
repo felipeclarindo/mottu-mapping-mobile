@@ -7,6 +7,7 @@ import PatioView from "../view/PatioView";
 import ReportView from "../view/ReportView";
 import AccountView from "../view/AccountView";
 import CustomDrawerContent from "./CustomDrawerContent";
+import { logout } from "../service/authService";
 
 const Drawer = createDrawerNavigator();
 
