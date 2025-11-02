@@ -15,7 +15,7 @@ import { useNavigation, DrawerActions } from "@react-navigation/native";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { BarChart } from "react-native-chart-kit";
-import Separator from "../components/ui/Separator";
+import Separator from "../components/Separator";
 import { HomeScreenNavigationProp } from "../model/navigation";
 import { motoService } from "../service/motoService";
 import { CountSectorDTO } from "../model/MotoModel";
@@ -25,7 +25,7 @@ const chartConfig = {
   backgroundGradientTo: "#121212",
   color: (opacity = 1) => `rgba(163, 230, 53, ${opacity})`,
   labelColor: () => "#C7D6B9",
-  barPercentage: 0.5,
+  barPercentage: 1.0,
   decimalPlaces: 0,
 };
 
@@ -81,9 +81,10 @@ const HomePage = () => {
       />
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Bem-vindo!</Text>
+        <Text style={styles.title}>Pátio - Unidade São Paulo</Text>
+        <Text style={styles.title}>Av. Paulista, 1106 - São Paulo, SP</Text>
 
-        <Text style={styles.subtitle}>Motos por Setor</Text>
+        <Text style={styles.subtitle}>Quantidade de motos por Setor</Text>
         {sectorLoading ? (
           <ActivityIndicator color="#54C65B" style={{ marginVertical: 24 }} />
         ) : sectorError ? (

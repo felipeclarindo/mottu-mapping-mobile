@@ -1,5 +1,4 @@
 import { ActivityIndicator, View } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./DrawerNavigator";
@@ -24,7 +23,6 @@ export default function MainNavigator() {
 
   return (
     <>
-      <StatusBar hidden />
       <NavigationContainer>
         {isLogged ? <DrawerNavigator /> : <AuthStack />}
       </NavigationContainer>

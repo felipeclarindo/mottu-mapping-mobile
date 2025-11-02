@@ -11,6 +11,6 @@ mottuMappingApi.interceptors.request.use(async (config) => {
     (config.headers as Record<string, string>)[
       "Authorization"
     ] = `Bearer ${token}`;
-    return config;
   }
+  return config;
 });
