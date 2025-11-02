@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -17,23 +17,44 @@ import useMotoControl from "../control/motoControl";
 
 const PatioPage = () => {
   const navigation = useNavigation();
-  const { motos, loading, error, loadMotos, hasMore } = useMotoControl();
+  const { motos, loading, error, loadMotos, hasMore, deleteMoto } =
+    useMotoControl();
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const isFirstLoad = useRef(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingMoto, setEditingMoto] = useState(null);
 
   React.useEffect(() => {
-    if (motos.length === 0) {
-      loadMotos(true);
+    if (isFirstLoad.current) {
+      setInitialLoading(true);
+      loadMotos(true).finally(() => {
+        setInitialLoading(false);
+        isFirstLoad.current = false;
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoadMore = () => {
-    if (!loading && hasMore) {
-      loadMotos();
+    if (!loadingMore && hasMore && !initialLoading) {
+      setLoadingMore(true);
+      loadMotos().finally(() => setLoadingMore(false));
     }
   };
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
+  const handleOpenModal = () => {
+    setEditingMoto(null);
+    setModalOpen(true);
+  };
+  const handleEditMoto = (moto) => {
+    setEditingMoto(moto);
+    setModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setEditingMoto(null);
+    setModalOpen(false);
+  };
   const handleSuccess = () => loadMotos(true);
 
   return (
@@ -43,7 +64,7 @@ const PatioPage = () => {
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
 
-      {loading && (
+      {initialLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#00FF00" />
           <Text style={styles.loadingText}>Carregando motos...</Text>
@@ -56,22 +77,30 @@ const PatioPage = () => {
         </View>
       )}
 
-      {!loading && !error && motos.length > 0 && (
+      {!initialLoading && !loading && !error && motos.length > 0 && (
         <FlatList
           data={motos}
           keyExtractor={(item) => String(item.motorcycleId)}
           numColumns={2}
           contentContainerStyle={styles.content}
-          renderItem={({ item }) => <MotoCard {...item} />}
+          renderItem={({ item }) => (
+            <MotoCard
+              {...item}
+              onDelete={deleteMoto}
+              onEdit={() => handleEditMoto(item)}
+            />
+          )}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.2}
           ListFooterComponent={
-            hasMore && loading ? <ActivityIndicator color="#54C65B" /> : null
+            hasMore && loadingMore ? (
+              <ActivityIndicator color="#54C65B" />
+            ) : null
           }
         />
       )}
 
-      {!loading && !error && motos.length === 0 && (
+      {!initialLoading && !loading && !error && motos.length === 0 && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Nenhuma moto encontrada.</Text>
         </View>
@@ -87,6 +116,7 @@ const PatioPage = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
+        moto={editingMoto}
       />
       <Footer />
     </View>

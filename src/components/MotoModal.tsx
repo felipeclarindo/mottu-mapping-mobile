@@ -18,9 +18,15 @@ interface MotoModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  moto?: any;
 }
 
-const MotoModal: React.FC<MotoModalProps> = ({ open, onClose, onSuccess }) => {
+const MotoModal: React.FC<MotoModalProps> = ({
+  open,
+  onClose,
+  onSuccess,
+  moto,
+}) => {
   const {
     plate,
     setPlate,
@@ -31,6 +37,8 @@ const MotoModal: React.FC<MotoModalProps> = ({ open, onClose, onSuccess }) => {
     sectorId,
     setSectorId,
     insertMoto,
+    updateMoto,
+    setMotorcycleId,
     loading,
     error,
     clearForm,
@@ -56,13 +64,21 @@ const MotoModal: React.FC<MotoModalProps> = ({ open, onClose, onSuccess }) => {
 
   useEffect(() => {
     if (open) {
-      clearForm();
+      if (moto) {
+        setPlate(moto.plate || "");
+        setCoordinates(moto.coordinates || "");
+        setModelId(moto.model?.modelId || null);
+        setSectorId(moto.sector?.sectorId || null);
+        setMotorcycleId(moto.motorcycleId);
+      } else {
+        clearForm();
+      }
       setErrors({});
       setSubmitError("");
       loadModels();
       loadSectors();
     }
-  }, [open]);
+  }, [open, moto]);
 
   const validate = async () => {
     try {
@@ -89,11 +105,19 @@ const MotoModal: React.FC<MotoModalProps> = ({ open, onClose, onSuccess }) => {
     const valid = await validate();
     if (!valid) return;
     try {
-      await insertMoto();
-      if (onSuccess) onSuccess();
-      onClose();
+      if (moto) {
+        await updateMoto();
+        if (onSuccess) onSuccess();
+        onClose();
+      } else {
+        await insertMoto();
+        if (onSuccess) onSuccess();
+        onClose();
+      }
     } catch (e: any) {
-      setSubmitError(e?.message || "Erro ao cadastrar moto");
+      setSubmitError(
+        e?.message || (moto ? "Erro ao editar moto" : "Erro ao cadastrar moto")
+      );
     }
   };
 
@@ -106,7 +130,9 @@ const MotoModal: React.FC<MotoModalProps> = ({ open, onClose, onSuccess }) => {
     >
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          <Text style={styles.title}>Cadastrar Moto</Text>
+          <Text style={styles.title}>
+            {moto ? "Editar Moto" : "Cadastrar Moto"}
+          </Text>
           <TextInput
             style={styles.input}
             placeholder="Placa"

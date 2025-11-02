@@ -1,7 +1,32 @@
-import { React }from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
 
-const MotoCard = ({ plate, sector, model }: any) => {
+const MotoCard = ({
+  plate,
+  sector,
+  model,
+  motorcycleId,
+  onDelete,
+  onEdit,
+}: any) => {
+  const handleDelete = () => {
+    Alert.alert("Remover moto", "Tem certeza que deseja remover esta moto?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Remover",
+        style: "destructive",
+        onPress: () => onDelete(motorcycleId),
+      },
+    ]);
+  };
   return (
     <View style={styles.card}>
       <Image
@@ -9,7 +34,6 @@ const MotoCard = ({ plate, sector, model }: any) => {
         style={styles.image}
         resizeMode="cover"
       />
-    
       <View style={styles.infoRow}>
         <Text style={styles.label}>Setor:</Text>
         <Text style={styles.value}>{sector?.name}</Text>
@@ -24,9 +48,24 @@ const MotoCard = ({ plate, sector, model }: any) => {
         <Text style={styles.label}>Placa:</Text>
         <Text style={styles.value}>{plate}</Text>
       </View>
-           <View style={styles.infoRow}>
+      <View style={styles.infoRow}>
         <Text style={styles.label}>Modelo:</Text>
         <Text style={styles.value}>{model?.modelName}</Text>
+      </View>
+      <View
+        style={{
+          alignItems: "flex-end",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <TouchableOpacity onPress={onEdit}>
+          <Feather name="edit-3" size={24} color="#54C65B" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDelete}>
+          <Feather name="trash-2" size={24} color="#f31c0c" />
+        </TouchableOpacity>
       </View>
     </View>
   );
