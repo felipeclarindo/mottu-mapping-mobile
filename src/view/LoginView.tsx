@@ -16,6 +16,7 @@ import { LoginScreenNavigationProp } from "../model/navigation";
 
 import { User } from "../model/UserModel";
 import { useUserControl } from "../control/userControl";
+import { useAuth } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
 
 const LoginPage = () => {
@@ -24,7 +25,9 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
+
   const { login, loading, error } = useUserControl();
+  const { setUser: setAuthUser } = useAuth();
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
@@ -43,6 +46,11 @@ const LoginPage = () => {
     try {
       const resp = await login(user.username, user.password);
       await SecureStore.setItemAsync("jwt_token", resp.token);
+      setAuthUser({
+        idUser: null,
+        username: resp.username,
+        password: "",
+      });
       Alert.alert("Bem-vindo!", `Login realizado!`);
       setUser({ idUser: null, username: "", password: "" });
       navigation.navigate("drawer");
@@ -58,14 +66,14 @@ const LoginPage = () => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={"padding"}
     >
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
         <Image
-          source={require("../../assets/logo.png")}
+          source={require("../assets/logo.png")}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -106,16 +114,6 @@ const LoginPage = () => {
             <Text style={styles.buttonText}>Entrar</Text>
           )}
         </TouchableOpacity>
-
-        <Text style={styles.footerText}>
-          Não tem conta?{" "}
-          <Text
-            onPress={() => navigation.navigate("register")}
-            style={styles.linkText}
-          >
-            Cadastre-se
-          </Text>
-        </Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
