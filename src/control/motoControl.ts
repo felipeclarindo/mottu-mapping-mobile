@@ -41,7 +41,7 @@ export const useMotoControl = () => {
   };
 
   const loadMotos = async (reset = false) => {
-    setLoading(true);
+    if (reset) setLoading(true);
     setError(null);
     try {
       const currentPage = reset ? 0 : page;
@@ -56,7 +56,7 @@ export const useMotoControl = () => {
       setError(e?.message || "Error loading motos");
       throw e;
     } finally {
-      setLoading(false);
+      if (reset) setLoading(false);
     }
   };
 
