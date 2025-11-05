@@ -8,6 +8,8 @@ import ReportView from "../view/ReportView";
 import AccountView from "../view/AccountView";
 import CustomDrawerContent from "./CustomDrawerContent";
 import { logout } from "../service/authService";
+import SettingsView from "../view/SettingsView";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -69,6 +71,16 @@ export default function DrawerNavigator() {
             <Feather name="user" size={size} color={color} />
           ),
           title: "Minha Conta",
+        }}
+      />
+      <Drawer.Screen
+        name="settings"
+        component={SettingsView}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="settings" size={size} color={color} />
+          ),
+          title: "Configurações",
         }}
       />
     </Drawer.Navigator>

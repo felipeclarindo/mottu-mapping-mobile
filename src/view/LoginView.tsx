@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LoginScreenNavigationProp } from "../model/navigation";
@@ -18,6 +19,8 @@ import { User } from "../model/UserModel";
 import { useUserControl } from "../control/userControl";
 import { useAuth } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
+import i18n, { changeLanguage } from "../i18n/i18n";
+import { onLanguageChange } from "../i18n/i18n"; 
 
 const LoginPage = () => {
   const [user, setUser] = useState<User>({
@@ -26,21 +29,29 @@ const LoginPage = () => {
     password: "",
   });
 
-  const { login, loading, error } = useUserControl();
+  const { login, loading } = useUserControl();
   const { setUser: setAuthUser } = useAuth();
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
+  // estado local para idioma atual
+  const [lang, setLang] = useState(i18n.locale);
+
+  React.useEffect(() => {
+    // registra listener que atualiza o state quando o idioma muda
+    const unsubscribe = onLanguageChange(() => setLang(i18n.locale));
+    return unsubscribe;
+  }, []);
+
+  const t = i18n.translations[i18n.locale] || i18n.translations.pt;
+
   const handleLogin = async () => {
     if (!user.username || !user.password) {
-      Alert.alert("Campos Obrigatórios", "Preencha seu usuário e senha.");
+      Alert.alert(t.login.requiredFields, t.login.fillFields);
       return;
     }
     if (user.password.length < 6) {
-      Alert.alert(
-        "Senha Inválida",
-        "A senha deve ter pelo menos 6 caracteres."
-      );
+      Alert.alert(t.login.invalidPassword, t.login.passwordLength);
       return;
     }
     try {
@@ -51,22 +62,26 @@ const LoginPage = () => {
         username: resp.username,
         password: "",
       });
-      Alert.alert("Bem-vindo!", `Login realizado!`);
+      Alert.alert(t.login.welcome, t.login.loginSuccess);
       setUser({ idUser: null, username: "", password: "" });
       navigation.navigate("drawer");
     } catch (e: any) {
       let message =
-        typeof e === "string"
-          ? e
-          : e?.message || "Não foi possível realizar o login.";
-      Alert.alert("Erro de Login", message);
+        typeof e === "string" ? e : e?.message || t.login.loginFailed;
+      Alert.alert(t.login.loginError, message);
     }
+  };
+
+  const toggleLanguage = () => {
+    const newLang = lang === "pt" ? "es" : "pt";
+    changeLanguage(newLang);
+    setLang(newLang);
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={"padding"}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.content}
@@ -78,10 +93,10 @@ const LoginPage = () => {
           resizeMode="contain"
         />
 
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>{t.login.title}</Text>
 
         <TextInput
-          placeholder="Usuário"
+          placeholder={t.login.username}
           placeholderTextColor="#888"
           style={styles.input}
           autoCapitalize="none"
@@ -92,7 +107,7 @@ const LoginPage = () => {
           editable={!loading}
         />
         <TextInput
-          placeholder="Senha"
+          placeholder={t.login.password}
           placeholderTextColor="#888"
           style={styles.input}
           secureTextEntry
@@ -111,9 +126,18 @@ const LoginPage = () => {
           {loading ? (
             <ActivityIndicator color="#121212" />
           ) : (
-            <Text style={styles.buttonText}>Entrar</Text>
+            <Text style={styles.buttonText}>{t.login.loginButton}</Text>
           )}
         </TouchableOpacity>
+
+        {/* Botão para trocar idioma */}
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity onPress={toggleLanguage}>
+            <Text style={styles.langButton}>
+              {lang === "pt" ? "🇪🇸 Mudar para Espanhol" : "🇧🇷 Cambiar a Portugués"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -159,6 +183,12 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   logo: { width: 250, height: 200, alignSelf: "center", marginBottom: 40 },
+  langButton: {
+    color: "#54C65B",
+    fontSize: 16,
+    fontWeight: "600",
+    textDecorationLine: "underline",
+  },
 });
 
 export default LoginPage;

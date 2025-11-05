@@ -10,7 +10,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.felipeclarindo.mottumapping"
@@ -24,6 +26,10 @@
     },
     "web": {
       "favicon": "./src/assets/logo.png"
-    }
+    },
+    "plugins": [
+      "expo-localization",
+      "expo-secure-store"
+    ]
   }
 }

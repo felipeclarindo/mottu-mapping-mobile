@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   View,
@@ -13,6 +13,9 @@ import { useModelControl } from "../control/modelControl";
 import { useSectorControl } from "../control/sectorControl";
 import DropDownPicker from "react-native-dropdown-picker";
 import { motoSchema, type Moto, type MotoError } from "../model/MotoModel";
+import i18n from "../i18n/i18n";
+import { onLanguageChange }  from "../i18n/i18n";
+
 
 interface MotoModalProps {
   open: boolean;
@@ -48,6 +51,15 @@ const MotoModal: React.FC<MotoModalProps> = ({
   const [submitError, setSubmitError] = React.useState<string>("");
   const [openModel, setOpenModel] = React.useState(false);
   const [openSector, setOpenSector] = React.useState(false);
+  const [language, setLanguage] = useState(i18n.locale);
+
+  React.useEffect(() => {
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
+  
+
+  const t = i18n.translations[language] || i18n.translations.pt;
 
   const {
     models,
@@ -64,6 +76,7 @@ const MotoModal: React.FC<MotoModalProps> = ({
 
   useEffect(() => {
     if (open) {
+      setLanguage(i18n.locale);
       if (moto) {
         setPlate(moto.plate || "");
         setCoordinates(moto.coordinates || "");
@@ -116,7 +129,10 @@ const MotoModal: React.FC<MotoModalProps> = ({
       }
     } catch (e: any) {
       setSubmitError(
-        e?.message || (moto ? "Erro ao editar moto" : "Erro ao cadastrar moto")
+        e?.message ||
+          (moto
+            ? t.motoModal?.editError || "Erro ao editar moto"
+            : t.motoModal?.createError || "Erro ao cadastrar moto")
       );
     }
   };
@@ -131,11 +147,13 @@ const MotoModal: React.FC<MotoModalProps> = ({
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <Text style={styles.title}>
-            {moto ? "Editar Moto" : "Cadastrar Moto"}
+            {moto
+              ? t.motoModal?.editTitle || "Editar Moto"
+              : t.motoModal?.createTitle || "Cadastrar Moto"}
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="Placa"
+            placeholder={t.motoModal?.plate || "Placa"}
             value={plate}
             onChangeText={setPlate}
             autoCapitalize="characters"
@@ -145,7 +163,7 @@ const MotoModal: React.FC<MotoModalProps> = ({
           {errors.plate && <Text style={styles.error}>{errors.plate}</Text>}
           <TextInput
             style={styles.input}
-            placeholder="Coordenadas"
+            placeholder={t.motoModal?.coordinates || "Coordenadas"}
             value={coordinates}
             onChangeText={setCoordinates}
             placeholderTextColor="#aaa"
@@ -153,7 +171,9 @@ const MotoModal: React.FC<MotoModalProps> = ({
           {errors.coordinates && (
             <Text style={styles.error}>{errors.coordinates}</Text>
           )}
-          <Text style={styles.label}>Modelo</Text>
+          <Text style={styles.label}>
+            {t.motoModal?.model || "Modelo"}
+          </Text>
           <DropDownPicker
             open={openModel}
             setOpen={setOpenModel}
@@ -163,7 +183,11 @@ const MotoModal: React.FC<MotoModalProps> = ({
               label: m.modelName,
               value: m.modelId,
             }))}
-            placeholder={loadingModels ? "Carregando..." : "Selecione o modelo"}
+            placeholder={
+              loadingModels
+                ? t.motoModal?.loadingModels || "Carregando..."
+                : t.motoModal?.selectModel || "Selecione o modelo"
+            }
             style={{ backgroundColor: "#222", borderColor: "#54C65B" }}
             dropDownContainerStyle={{
               backgroundColor: "#222",
@@ -178,14 +202,20 @@ const MotoModal: React.FC<MotoModalProps> = ({
           {errors.modelId && <Text style={styles.error}>{errors.modelId}</Text>}
           {errorModels && <Text style={styles.error}>{errorModels}</Text>}
 
-          <Text style={styles.label}>Setor</Text>
+          <Text style={styles.label}>
+            {t.motoModal?.sector || "Setor"}
+          </Text>
           <DropDownPicker
             open={openSector}
             setOpen={setOpenSector}
             value={sectorId}
             setValue={setSectorId}
             items={sectors.map((s) => ({ label: s.name, value: s.sectorId }))}
-            placeholder={loadingSectors ? "Carregando..." : "Selecione o setor"}
+            placeholder={
+              loadingSectors
+                ? t.motoModal?.loadingSectors || "Carregando..."
+                : t.motoModal?.selectSector || "Selecione o setor"
+            }
             style={{ backgroundColor: "#222", borderColor: "#54C65B" }}
             dropDownContainerStyle={{
               backgroundColor: "#222",
@@ -212,7 +242,9 @@ const MotoModal: React.FC<MotoModalProps> = ({
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.buttonText}>Salvar</Text>
+                <Text style={styles.buttonText}>
+                  {t.motoModal?.save || "Salvar"}
+                </Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
@@ -220,7 +252,9 @@ const MotoModal: React.FC<MotoModalProps> = ({
               onPress={onClose}
               disabled={loading}
             >
-              <Text style={styles.buttonText}>Cancelar</Text>
+              <Text style={styles.buttonText}>
+                {t.motoModal?.cancel || "Cancelar"}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

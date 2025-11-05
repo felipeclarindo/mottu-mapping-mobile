@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
+import i18n from "../i18n/i18n";
+import { onLanguageChange }  from "../i18n/i18n";
+
 
 const MotoCard = ({
   plate,
@@ -17,16 +21,36 @@ const MotoCard = ({
   onDelete,
   onEdit,
 }: any) => {
+  const [language, setLanguage] = useState(i18n.locale);
+  React.useEffect(() => {
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
+  
+
+  const t = i18n.translations[language] || i18n.translations.pt;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLanguage(i18n.locale);
+    }, [])
+  );
+
   const handleDelete = () => {
-    Alert.alert("Remover moto", "Tem certeza que deseja remover esta moto?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Remover",
-        style: "destructive",
-        onPress: () => onDelete(motorcycleId),
-      },
-    ]);
+    Alert.alert(
+      "Remover moto",
+      "Tem certeza que deseja remover esta moto?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Remover",
+          style: "destructive",
+          onPress: () => onDelete(motorcycleId),
+        },
+      ]
+    );
   };
+
   return (
     <View style={styles.card}>
       <Image
@@ -35,21 +59,21 @@ const MotoCard = ({
         resizeMode="cover"
       />
       <View style={styles.infoRow}>
-        <Text style={styles.label}>Setor:</Text>
+        <Text style={styles.label}>{t.patio.sector}</Text>
         <Text style={styles.value}>{sector?.name}</Text>
       </View>
       <View style={styles.infoRow}>
-        <Text style={styles.label}>Cor do Setor:</Text>
+        <Text style={styles.label}>{t.patio.sectorColor}</Text>
         <View
           style={[styles.colorSquare, { backgroundColor: sector?.colorRgb }]}
         />
       </View>
       <View style={styles.infoRow}>
-        <Text style={styles.label}>Placa:</Text>
+        <Text style={styles.label}>{t.patio.plate}</Text>
         <Text style={styles.value}>{plate}</Text>
       </View>
       <View style={styles.infoRow}>
-        <Text style={styles.label}>Modelo:</Text>
+        <Text style={styles.label}>{t.patio.model}</Text>
         <Text style={styles.value}>{model?.modelName}</Text>
       </View>
       <View

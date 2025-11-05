@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,41 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { AccountScreenNavigationProp } from "../model/navigation";
 import { useAuth } from "../context/AuthContext";
-import { Image } from "react-native";
+import i18n from "../i18n/i18n";
+import { onLanguageChange } from "../i18n/i18n"; 
 
 const AccountPage = () => {
   const { user, logout } = useAuth();
   const navigation = useNavigation<AccountScreenNavigationProp>();
+  const [language, setLanguage] = useState(i18n.locale);
+
+  React.useEffect(() => {
+    // registra listener que atualiza o state quando o idioma muda
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
+
+  const t = i18n.translations[language] || i18n.translations.pt;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLanguage(i18n.locale);
+    }, [])
+  );
 
   const handleLogout = () => {
-    Alert.alert("Sair", "Tem certeza que deseja sair?", [
-      { text: "Cancelar", style: "cancel" },
+    Alert.alert(t.account.logout, t.account.logoutConfirm, [
+      { text: t.account.cancel, style: "cancel" },
       {
-        text: "Sair",
+        text: t.account.logout,
         style: "destructive",
         onPress: async () => {
           await logout();
@@ -36,18 +53,18 @@ const AccountPage = () => {
   return (
     <View style={styles.container}>
       <Header
-        title="Minha Conta"
+        title={t.account.title}
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Informações da Conta</Text>
+        <Text style={styles.title}>{t.account.accountInfo}</Text>
         <View style={styles.profileContainer}>
           <Image
             source={require("../assets/profile-generic.jpg")}
             style={styles.profileImage}
             resizeMode="cover"
           />
-          <Text style={styles.profileName}>{user?.username || "Usuário"}</Text>
+          <Text style={styles.profileName}>{user?.username || t.account.user}</Text>
         </View>
         <View style={styles.buttonGroup}>
           <TouchableOpacity
@@ -55,7 +72,7 @@ const AccountPage = () => {
             onPress={handleLogout}
             activeOpacity={0.7}
           >
-            <Text style={styles.secondaryButtonText}>Sair</Text>
+            <Text style={styles.secondaryButtonText}>{t.account.logout}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

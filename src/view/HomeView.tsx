@@ -19,6 +19,9 @@ import Separator from "../components/Separator";
 import { HomeScreenNavigationProp } from "../model/navigation";
 import { motoService } from "../service/motoService";
 import { CountSectorDTO } from "../model/MotoModel";
+import i18n from "../i18n/i18n";
+import { onLanguageChange } from "../i18n/i18n"; 
+
 
 const chartConfig = {
   backgroundGradientFrom: "#121212",
@@ -41,16 +44,28 @@ const HomePage = () => {
   const [sectorLoading, setSectorLoading] = useState(false);
   const [sectorError, setSectorError] = useState<string | null>(null);
 
+  const [language, setLanguage] = useState(i18n.locale);
+
+  React.useEffect(() => {
+    // registra listener que atualiza o state quando o idioma muda
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
+
+  // Força re-render quando o idioma muda
+  const t = i18n.translations[language] || i18n.translations.pt;
+
   useFocusEffect(
     useCallback(() => {
+      setLanguage(i18n.locale);
       setSectorLoading(true);
       setSectorError(null);
       motoService
         .countMotosBySector()
         .then((data) => setSectorCounts(data ?? []))
-        .catch((e) => setSectorError(e?.message || "Erro ao buscar setores"))
+        .catch((e) => setSectorError(e?.message || t.home.chartError))
         .finally(() => setSectorLoading(false));
-    }, [])
+    }, [i18n.locale])
   );
 
   const labels = sectorCounts.map((s) => s.sectorName);
@@ -81,10 +96,10 @@ const HomePage = () => {
       />
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Pátio - Unidade São Paulo</Text>
-        <Text style={styles.title}>Av. Paulista, 1106 - São Paulo, SP</Text>
+        <Text style={styles.title}>{t.home.title}</Text>
+        <Text style={styles.title}>{t.home.address}</Text>
 
-        <Text style={styles.subtitle}>Quantidade de motos por Setor</Text>
+        <Text style={styles.subtitle}>{t.home.subtitle}</Text>
         {sectorLoading ? (
           <ActivityIndicator color="#54C65B" style={{ marginVertical: 24 }} />
         ) : sectorError ? (
@@ -130,7 +145,7 @@ const HomePage = () => {
                       fontSize: 16,
                     }}
                   >
-                    {s.sectorName}
+                    {i18n.t(`home.sectors.${s.sectorName.toLowerCase()}`, { defaultValue: s.sectorName })}
                   </Text>
                   <Text
                     style={{
@@ -150,7 +165,7 @@ const HomePage = () => {
         <Separator />
 
         <Text style={styles.subtitle}>
-          Acompanhe as motos no pátio e gere relatórios em tempo real.
+          {t.home.description}
         </Text>
 
         <Pressable
@@ -163,14 +178,14 @@ const HomePage = () => {
           ]}
         >
           <Text style={styles.mainButtonText}>
-            Mostrar Imagem e Gerar Relatório
+            {t.home.showImage}
           </Text>
         </Pressable>
 
         {loading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#54C65B" />
-            <Text style={styles.loadingText}>Carregando...</Text>
+            <Text style={styles.loadingText}>{t.home.loading}</Text>
           </View>
         )}
 
@@ -188,13 +203,13 @@ const HomePage = () => {
               style={styles.button}
               onPress={handleRedirectToReport}
             >
-              <Text style={styles.buttonText}>Ver Relatório</Text>
+              <Text style={styles.buttonText}>{t.home.report}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={handleRedirectToPatio}
             >
-              <Text style={styles.buttonText}>Ir para o Pátio</Text>
+              <Text style={styles.buttonText}>{t.home.patio}</Text>
             </TouchableOpacity>
           </View>
         )}

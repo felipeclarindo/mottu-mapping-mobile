@@ -12,8 +12,10 @@ import MotoModal from "../components/MotoModal";
 import MotoCard from "../components/MotoCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useNavigation, DrawerActions, useFocusEffect } from "@react-navigation/native";
 import useMotoControl from "../control/motoControl";
+import i18n from "../i18n/i18n";
+import { onLanguageChange } from "../i18n/i18n"; 
 
 const PatioPage = () => {
   const navigation = useNavigation();
@@ -24,6 +26,21 @@ const PatioPage = () => {
   const isFirstLoad = useRef(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingMoto, setEditingMoto] = useState(null);
+  const [language, setLanguage] = useState(i18n.locale);
+
+  React.useEffect(() => {
+    // registra listener que atualiza o state quando o idioma muda
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
+
+  const t = i18n.translations[language] || i18n.translations.pt;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLanguage(i18n.locale);
+    }, [])
+  );
 
   React.useEffect(() => {
     if (isFirstLoad.current) {
@@ -60,14 +77,14 @@ const PatioPage = () => {
   return (
     <View style={styles.container}>
       <Header
-        title="Pátio de Motos"
+        title={t.patio.title}
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
 
       {initialLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#00FF00" />
-          <Text style={styles.loadingText}>Carregando motos...</Text>
+          <Text style={styles.loadingText}>{t.patio.loadingMotos}</Text>
         </View>
       )}
 
@@ -102,7 +119,7 @@ const PatioPage = () => {
 
       {!initialLoading && !loading && !error && motos.length === 0 && (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Nenhuma moto encontrada.</Text>
+          <Text style={styles.errorText}>{t.patio.noMotos}</Text>
         </View>
       )}
       <TouchableOpacity
