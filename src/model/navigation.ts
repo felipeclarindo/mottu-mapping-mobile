@@ -2,11 +2,11 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type DrawerParamList = {
-  home: HomeScreenNavigationProp;
-  patio: PatioScreenNavigationProp;
-  report: ReportScreenNavigationProp;
-  account: AccountScreenNavigationProp;
-  login: LoginScreenNavigationProp;
+  home: undefined;
+  patio: undefined;
+  report: undefined;
+  account: undefined;
+  login: undefined;
 };
 
 export type HomeScreenNavigationProp = DrawerNavigationProp<
@@ -19,24 +19,9 @@ export type AccountScreenNavigationProp = DrawerNavigationProp<
   "account"
 >;
 
-export type ReportScreenNavigationProp = DrawerNavigationProp<
-  DrawerParamList,
-  "report"
->;
-
-export type PatioScreenNavigationProp = DrawerNavigationProp<
-  DrawerParamList,
-  "patio"
->;
-
-export type RegisterScreenNavigationProp = NativeStackNavigationProp<
-  AuthStackParamList,
-  "register"
->;
-
 export type AuthStackParamList = {
-  login: LoginScreenNavigationProp;
-  register: RegisterScreenNavigationProp;
+  login: undefined;
+  register: undefined;
   drawer: DrawerParamList;
 };
 
