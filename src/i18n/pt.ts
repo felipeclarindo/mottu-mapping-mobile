@@ -9,7 +9,6 @@ export default {
     loading: "Carregando...",
     report: "Ver Relatório",
     patio: "Ir para o Pátio",
-    // 🔹 adicionados para gráfico e setores
     sectors: {
       chegada: "Chegada",
       expedicao: "Expedição",
@@ -39,7 +38,6 @@ export default {
     sectorColor: "Cor do Setor:",
     plate: "Placa:",
     model: "Modelo:",
-    // 🔹 setores
     sectors: {
       chegada: "Chegada",
       expedicao: "Expedição",
@@ -56,7 +54,19 @@ export default {
     shareError: "Erro",
     shareErrorMessage: "Não foi possível compartilhar o arquivo:",
     reportError: "Erro ao gerar relatório",
+    // Auxiliares para o texto do relatório completo
+    titleHeader: "Relatório de Mapeamento do Pátio",
+    fullTitle: "Relatório Completo de Mapeamento do Pátio",
+    date: "Data",
+    totalMotos: "Número total de motos",
+    detailsBySector: "Detalhes por Setor",
+    generalInfo: "Informações Gerais",
+    area: "Área total do pátio",
+    capacity: "Capacidade máxima de motos",
+    observations: "Observações",
+    success: "Pátio mapeado com sucesso.",
   },
+  moto: "moto",
   account: {
     title: "Minha Conta",
     accountInfo: "Informações da Conta",
@@ -96,7 +106,6 @@ export default {
     editError: "Erro ao editar moto",
   },
 };
-
 
 // export default {
 //   home: {
@@ -180,5 +189,5 @@ export default {
 //     createError: "Erro ao cadastrar moto",
 //     editError: "Erro ao editar moto",
 //   },
-  
+
 // };
