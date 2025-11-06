@@ -3,22 +3,28 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
 } from "react-native";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { DrawerActions, useNavigation, useFocusEffect } from "@react-navigation/native";
-import i18n from "../i18n/i18n";
-import { onLanguageChange } from "../i18n/i18n"; 
+import {
+  DrawerActions,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 
+import i18n from "../i18n/i18n";
+import { onLanguageChange } from "../i18n/i18n";
+import { useTheme } from "../context/ThemeContext";
+import { settingsViewStyles } from "../theme/styles";
 
 const SettingsPage = () => {
   const navigation = useNavigation();
   const [language, setLanguage] = useState(i18n.locale);
+  const { isDark, toggleTheme, colors } = useTheme();
+  const styles = settingsViewStyles(colors);
 
   React.useEffect(() => {
-    // registra listener que atualiza o state quando o idioma muda
     const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
     return unsubscribe;
   }, []);
@@ -43,11 +49,9 @@ const SettingsPage = () => {
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t.settings.title}</Text>
-        
+        <Text style={styles.title as any}>{t.settings.title}</Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t.settings.language}</Text>
-          
           <TouchableOpacity
             style={[
               styles.languageButton,
@@ -64,7 +68,6 @@ const SettingsPage = () => {
               🇧🇷 {t.settings.portuguese}
             </Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={[
               styles.languageButton,
@@ -82,64 +85,29 @@ const SettingsPage = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Tema</Text>
+          <TouchableOpacity
+            style={[
+              styles.languageButton,
+              !isDark && styles.languageButtonActive,
+            ]}
+            onPress={toggleTheme}
+          >
+            <Text
+              style={[
+                styles.languageButtonText,
+                !isDark && styles.languageButtonTextActive,
+              ]}
+            >
+              {isDark ? "🌞 Modo Claro" : "🌙 Modo Escuro"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
       <Footer />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-  },
-  content: {
-    padding: 20,
-    flexGrow: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#54C65B",
-    textAlign: "center",
-    marginBottom: 32,
-  },
-  section: {
-    backgroundColor: "#1F1F1F",
-    borderColor: "#3A6E33",
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#C7D6B9",
-    marginBottom: 16,
-  },
-  languageButton: {
-    backgroundColor: "#2A2A2A",
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: "transparent",
-  },
-  languageButtonActive: {
-    backgroundColor: "#3A6E33",
-    borderColor: "#54C65B",
-  },
-  languageButtonText: {
-    color: "#C7D6B9",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  languageButtonTextActive: {
-    color: "#FFFFFF",
-  },
-});
 
 export default SettingsPage;
