@@ -1,5 +1,5 @@
 import { fetchMotoModels } from "../fetcher/modelFetcher";
-import { ModelDTO } from "../model/MotoModel";
+import { ModelDTO } from "../model/ModelModel";
 
 export const modelService = {
   getAllModels: async (): Promise<ModelDTO[]> => {
