@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { modelService } from "../service/modelService";
-import { ModelDTO } from "../model/MotoModel";
+import { ModelDTO } from "../model/ModelModel";
 
 export function useModelControl() {
   const [models, setModels] = useState<ModelDTO[]>([]);

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { sectorService } from "../service/sectorService";
-import { SectorDTO } from "../model/MotoModel";
+import { SectorDTO } from "../model/SectorModel";
 
 export function useSectorControl() {
   const [sectors, setSectors] = useState<SectorDTO[]>([]);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motoService } from "../service/motoService";
 
 export const useMotoControl = () => {
