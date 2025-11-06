@@ -12,21 +12,15 @@ const userSchema = object({
 
 type User = InferType<typeof userSchema>;
 
-interface UserError {
-  user?: string;
-  email?: string;
-  password?: string;
-}
-
-export type LoginRequestDTO = {
+type LoginRequestDTO = {
   username: string;
   password: string;
 };
 
-export type LoginResponseDTO = {
+type LoginResponseDTO = {
   token: string;
   username: string;
   role: string;
 };
 
-export { userSchema, User, UserError };
+export { userSchema, User, LoginRequestDTO, LoginResponseDTO};

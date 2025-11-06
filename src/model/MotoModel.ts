@@ -1,4 +1,6 @@
 import { InferType, object, string, number } from "yup";
+import { ModelDTO } from "./ModelModel";
+import { SectorDTO } from "./SectorModel";
 
 const motoSchema = object({
   motorcycleId: number().nullable(),
@@ -10,24 +12,12 @@ const motoSchema = object({
 
 type Moto = InferType<typeof motoSchema>;
 
-export type CountSectorDTO = {
+type CountSectorDTO = {
   sectorName: string;
   motoCount: number;
 };
 
-export type SectorDTO = {
-  sectorId: number;
-  name: string;
-  description: string;
-  colorRgb: string;
-};
-
-export type ModelDTO = {
-  modelId: number;
-  modelName: string;
-};
-
-export type MotoResponse = {
+type MotoResponse = {
   motorcycleId: number;
   plate: string;
   coordinates: string;
@@ -35,7 +25,7 @@ export type MotoResponse = {
   model: ModelDTO;
 };
 
-export type MotoPage = {
+type MotoPage = {
   totalElements: number;
   totalPages: number;
   first: boolean;
@@ -56,4 +46,4 @@ interface MotoError {
   sectorId?: string;
 }
 
-export { motoSchema, type Moto, type MotoError };
+export { motoSchema, type Moto, type MotoError, MotoPage, MotoResponse, CountSectorDTO};
