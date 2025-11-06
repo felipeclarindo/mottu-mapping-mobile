@@ -1,5 +1,5 @@
 import { mottuMappingApi } from "./api";
-import { MotoPage, MotoResponse, CountSectorDTO } from "../model/MotoModel";
+import { MotoPage, CountSectorDTO } from "../model/MotoModel";
 
 export const fetchMotos = async (
   page = 0,

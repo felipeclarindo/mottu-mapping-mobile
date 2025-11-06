@@ -1,4 +1,4 @@
-import { SectorDTO } from "../model/MotoModel";
+import { SectorDTO } from "../model/SectorModel";
 import { mottuMappingApi } from "./api";
 
 export const fetchSectors = async (): Promise<SectorDTO[] | null> => {

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { LoginRequestDTO, LoginResponseDTO } from "../model/UserModel";
 import { mottuMappingApi } from "./api";
 

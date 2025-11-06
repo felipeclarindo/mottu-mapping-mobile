@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ModelDTO } from "../model/MotoModel";
+import { ModelDTO } from "../model/ModelModel";
 import { mottuMappingApi } from "./api";
 
 export const fetchMotoModels = async (): Promise<ModelDTO[] | null> => {
