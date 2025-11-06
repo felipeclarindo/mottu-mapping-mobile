@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
   View,
-  StyleSheet,
   FlatList,
   ActivityIndicator,
   Text,
@@ -12,10 +11,16 @@ import MotoModal from "../components/MotoModal";
 import MotoCard from "../components/MotoCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useNavigation, DrawerActions, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  DrawerActions,
+  useFocusEffect,
+} from "@react-navigation/native";
 import useMotoControl from "../control/motoControl";
 import i18n from "../i18n/i18n";
-import { onLanguageChange } from "../i18n/i18n"; 
+import { onLanguageChange } from "../i18n/i18n";
+import { useTheme } from "../context/ThemeContext";
+import { patioViewStyles } from "../theme/styles";
 
 const PatioPage = () => {
   const navigation = useNavigation();
@@ -29,7 +34,6 @@ const PatioPage = () => {
   const [language, setLanguage] = useState(i18n.locale);
 
   React.useEffect(() => {
-    // registra listener que atualiza o state quando o idioma muda
     const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
     return unsubscribe;
   }, []);
@@ -50,7 +54,6 @@ const PatioPage = () => {
         isFirstLoad.current = false;
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoadMore = () => {
@@ -74,6 +77,8 @@ const PatioPage = () => {
   };
   const handleSuccess = () => loadMotos(true);
 
+  const { colors } = useTheme();
+  const styles = patioViewStyles(colors);
   return (
     <View style={styles.container}>
       <Header
@@ -83,14 +88,14 @@ const PatioPage = () => {
 
       {initialLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#00FF00" />
+          <ActivityIndicator size="large" color={colors.primary} />
           <Text style={styles.loadingText}>{t.patio.loadingMotos}</Text>
         </View>
       )}
 
       {error && !loading && (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={[styles.errorText, { color: "red" }]}>{error}</Text>
         </View>
       )}
 
@@ -111,7 +116,7 @@ const PatioPage = () => {
           onEndReachedThreshold={0.2}
           ListFooterComponent={
             hasMore && loadingMore ? (
-              <ActivityIndicator color="#54C65B" />
+              <ActivityIndicator color={colors.primary} />
             ) : null
           }
         />
@@ -127,7 +132,7 @@ const PatioPage = () => {
         onPress={handleOpenModal}
         activeOpacity={0.8}
       >
-        <MaterialIcons name="add" size={32} color="#fff" />
+        <MaterialIcons name="add" size={32} color={colors.background} />
       </TouchableOpacity>
       <MotoModal
         open={modalOpen}
@@ -139,57 +144,5 @@ const PatioPage = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-  },
-  content: {
-    padding: 16,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    width: "100%",
-    height: "100%",
-  },
-  loadingText: {
-    color: "#FFF",
-    marginTop: 10,
-    textAlign: "center",
-    width: "100%",
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  fab: {
-    position: "absolute",
-    alignSelf: "flex-end",
-    bottom: 96,
-    marginRight: 40,
-    backgroundColor: "#54C65B",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    zIndex: 10,
-  },
-});
 
 export default PatioPage;
