@@ -1,23 +1,28 @@
+import i18n from "../i18n/i18n";
 import React from "react";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { View, Text, StyleSheet, Image, Alert } from "react-native";
+import { View, Text, Image, Alert } from "react-native";
+import { drawerStyles } from "../theme/styles";
 import { useAuth } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
 export default function CustomDrawerContent(props: any) {
   const { logout } = useAuth();
   const navigation = useNavigation<any>();
+  const { colors } = useTheme();
+  const styles = drawerStyles(colors);
 
   const handleLogout = () => {
-    Alert.alert("Sair", "Tem certeza que deseja sair?", [
-      { text: "Cancelar", style: "cancel" },
+    Alert.alert(i18n.t("drawer.logout"), i18n.t("account.logoutConfirm"), [
+      { text: i18n.t("account.cancel"), style: "cancel" },
       {
-        text: "Sair",
+        text: i18n.t("drawer.logout"),
         style: "destructive",
         onPress: async () => {
           await logout();
@@ -38,32 +43,14 @@ export default function CustomDrawerContent(props: any) {
       </View>
       <DrawerItemList {...props} />
       <DrawerItem
-        label="Sair"
+        label={i18n.t("drawer.logout")}
         icon={({ color, size }) => (
-          <Feather name="log-out" size={size} color={color} />
+          <Feather name="log-out" size={size} color={colors.primary} />
         )}
         onPress={handleLogout}
-        labelStyle={{ color: "#D9534F", fontWeight: "bold" }}
-        style={{ marginTop: 16, borderTopWidth: 1, borderTopColor: "#222" }}
+        labelStyle={styles.logoutLabel}
+        style={styles.logoutButton}
       />
     </DrawerContentScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    backgroundColor: "#000000",
-  },
-  header: {
-    padding: 20,
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#54C65B",
-    alignItems: "center",
-  },
-  logo: {
-    width: 150,
-    height: 120,
-    marginBottom: 10,
-  },
-});

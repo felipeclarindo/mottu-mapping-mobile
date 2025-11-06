@@ -5,17 +5,17 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import { useTheme } from "../context/ThemeContext";
+import { motoModalStyles } from "../theme/styles";
 import useMotoControl from "../control/motoControl";
 import { useModelControl } from "../control/modelControl";
 import { useSectorControl } from "../control/sectorControl";
 import DropDownPicker from "react-native-dropdown-picker";
 import { motoSchema, type Moto, type MotoError } from "../model/MotoModel";
 import i18n from "../i18n/i18n";
-import { onLanguageChange }  from "../i18n/i18n";
-
+import { onLanguageChange } from "../i18n/i18n";
 
 interface MotoModalProps {
   open: boolean;
@@ -46,6 +46,8 @@ const MotoModal: React.FC<MotoModalProps> = ({
     error,
     clearForm,
   } = useMotoControl();
+  const { colors } = useTheme();
+  const themedStyles = motoModalStyles(colors);
 
   const [errors, setErrors] = React.useState<MotoError>({});
   const [submitError, setSubmitError] = React.useState<string>("");
@@ -57,7 +59,6 @@ const MotoModal: React.FC<MotoModalProps> = ({
     const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
     return unsubscribe;
   }, []);
-  
 
   const t = i18n.translations[language] || i18n.translations.pt;
 
@@ -144,34 +145,36 @@ const MotoModal: React.FC<MotoModalProps> = ({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
-          <Text style={styles.title}>
+      <View style={themedStyles.overlay}>
+        <View style={themedStyles.modal}>
+          <Text style={themedStyles.title}>
             {moto
               ? t.motoModal?.editTitle || "Editar Moto"
               : t.motoModal?.createTitle || "Cadastrar Moto"}
           </Text>
           <TextInput
-            style={styles.input}
+            style={themedStyles.input}
             placeholder={t.motoModal?.plate || "Placa"}
             value={plate}
             onChangeText={setPlate}
             autoCapitalize="characters"
             maxLength={10}
-            placeholderTextColor="#aaa"
+            placeholderTextColor={colors.text + "99"}
           />
-          {errors.plate && <Text style={styles.error}>{errors.plate}</Text>}
+          {errors.plate && (
+            <Text style={themedStyles.error}>{errors.plate}</Text>
+          )}
           <TextInput
-            style={styles.input}
+            style={themedStyles.input}
             placeholder={t.motoModal?.coordinates || "Coordenadas"}
             value={coordinates}
             onChangeText={setCoordinates}
-            placeholderTextColor="#aaa"
+            placeholderTextColor={colors.text + "99"}
           />
           {errors.coordinates && (
-            <Text style={styles.error}>{errors.coordinates}</Text>
+            <Text style={themedStyles.error}>{errors.coordinates}</Text>
           )}
-          <Text style={styles.label}>
+          <Text style={themedStyles.label}>
             {t.motoModal?.model || "Modelo"}
           </Text>
           <DropDownPicker
@@ -188,21 +191,26 @@ const MotoModal: React.FC<MotoModalProps> = ({
                 ? t.motoModal?.loadingModels || "Carregando..."
                 : t.motoModal?.selectModel || "Selecione o modelo"
             }
-            style={{ backgroundColor: "#222", borderColor: "#54C65B" }}
-            dropDownContainerStyle={{
-              backgroundColor: "#222",
-              borderColor: "#54C65B",
+            style={{
+              backgroundColor: colors.card,
+              borderColor: colors.primary,
             }}
-            textStyle={{ color: "#fff" }}
-            placeholderStyle={{ color: "#aaa" }}
-            listItemLabelStyle={{ color: "#fff" }}
+            dropDownContainerStyle={{
+              backgroundColor: colors.card,
+              borderColor: colors.primary,
+            }}
+            textStyle={{ color: colors.text }}
+            placeholderStyle={{ color: colors.text + "99" }}
+            listItemLabelStyle={{ color: colors.text }}
             zIndex={3000}
             zIndexInverse={1000}
           />
-          {errors.modelId && <Text style={styles.error}>{errors.modelId}</Text>}
-          {errorModels && <Text style={styles.error}>{errorModels}</Text>}
+          {errors.modelId && (
+            <Text style={themedStyles.error}>{errors.modelId}</Text>
+          )}
+          {errorModels && <Text style={themedStyles.error}>{errorModels}</Text>}
 
-          <Text style={styles.label}>
+          <Text style={themedStyles.label}>
             {t.motoModal?.sector || "Setor"}
           </Text>
           <DropDownPicker
@@ -216,43 +224,50 @@ const MotoModal: React.FC<MotoModalProps> = ({
                 ? t.motoModal?.loadingSectors || "Carregando..."
                 : t.motoModal?.selectSector || "Selecione o setor"
             }
-            style={{ backgroundColor: "#222", borderColor: "#54C65B" }}
-            dropDownContainerStyle={{
-              backgroundColor: "#222",
-              borderColor: "#54C65B",
+            style={{
+              backgroundColor: colors.card,
+              borderColor: colors.primary,
             }}
-            textStyle={{ color: "#fff" }}
-            placeholderStyle={{ color: "#aaa" }}
-            listItemLabelStyle={{ color: "#fff" }}
+            dropDownContainerStyle={{
+              backgroundColor: colors.card,
+              borderColor: colors.primary,
+            }}
+            textStyle={{ color: colors.text }}
+            placeholderStyle={{ color: colors.text + "99" }}
+            listItemLabelStyle={{ color: colors.text }}
             zIndex={2000}
             zIndexInverse={2000}
           />
           {errors.sectorId && (
-            <Text style={styles.error}>{errors.sectorId}</Text>
+            <Text style={themedStyles.error}>{errors.sectorId}</Text>
           )}
-          {errorSectors && <Text style={styles.error}>{errorSectors}</Text>}
-          {submitError ? <Text style={styles.error}>{submitError}</Text> : null}
-          {error && <Text style={styles.error}>{error}</Text>}
-          <View style={styles.actions}>
+          {errorSectors && (
+            <Text style={themedStyles.error}>{errorSectors}</Text>
+          )}
+          {submitError ? (
+            <Text style={themedStyles.error}>{submitError}</Text>
+          ) : null}
+          {error && <Text style={themedStyles.error}>{error}</Text>}
+          <View style={themedStyles.actions}>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#54C65B" }]}
+              style={[themedStyles.button, { backgroundColor: colors.primary }]}
               onPress={handleSubmit}
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.background} />
               ) : (
-                <Text style={styles.buttonText}>
+                <Text style={themedStyles.buttonText}>
                   {t.motoModal?.save || "Salvar"}
                 </Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#888" }]}
+              style={[themedStyles.button, { backgroundColor: colors.border }]}
               onPress={onClose}
               disabled={loading}
             >
-              <Text style={styles.buttonText}>
+              <Text style={[themedStyles.buttonText, { color: colors.text }]}>
                 {t.motoModal?.cancel || "Cancelar"}
               </Text>
             </TouchableOpacity>
@@ -262,65 +277,5 @@ const MotoModal: React.FC<MotoModalProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.7)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modal: {
-    backgroundColor: "#222",
-    borderRadius: 12,
-    padding: 24,
-    width: 320,
-    alignItems: "stretch",
-  },
-  title: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "#333",
-    color: "#fff",
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 8,
-    fontSize: 16,
-  },
-  error: {
-    color: "red",
-    marginBottom: 8,
-    fontSize: 14,
-  },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    marginHorizontal: 4,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  label: {
-    color: "#fff",
-    fontSize: 15,
-    marginBottom: 4,
-    marginTop: 8,
-  },
-});
 
 export default MotoModal;

@@ -1,19 +1,21 @@
+import i18n from "../i18n/i18n";
+
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Feather } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
 import HomeView from "../view/HomeView";
 import PatioView from "../view/PatioView";
 import ReportView from "../view/ReportView";
 import AccountView from "../view/AccountView";
 import CustomDrawerContent from "./CustomDrawerContent";
-import { logout } from "../service/authService";
 import SettingsView from "../view/SettingsView";
-
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator() {
+  const { colors } = useTheme();
   return (
     <Drawer.Navigator
       id={undefined}
@@ -21,15 +23,15 @@ export default function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: "#54C65B",
-        drawerInactiveTintColor: "#8D8D8D",
+        drawerActiveTintColor: colors.primary,
+        drawerInactiveTintColor: colors.text + "99",
         drawerLabelStyle: {
           fontWeight: "600",
           fontSize: 16,
         },
-        drawerActiveBackgroundColor: "#1C1C1C",
+        drawerActiveBackgroundColor: colors.card,
         drawerStyle: {
-          backgroundColor: "#000000",
+          backgroundColor: colors.background,
         },
       }}
     >
@@ -40,7 +42,7 @@ export default function DrawerNavigator() {
           drawerIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
-          title: "Início",
+          title: i18n.t("drawer.home"),
         }}
       />
       <Drawer.Screen
@@ -50,7 +52,7 @@ export default function DrawerNavigator() {
           drawerIcon: ({ color, size }) => (
             <Feather name="map" size={size} color={color} />
           ),
-          title: "Pátio",
+          title: i18n.t("drawer.patio"),
         }}
       />
       <Drawer.Screen
@@ -60,7 +62,7 @@ export default function DrawerNavigator() {
           drawerIcon: ({ color, size }) => (
             <Feather name="file-text" size={size} color={color} />
           ),
-          title: "Relatórios",
+          title: i18n.t("drawer.reports"),
         }}
       />
       <Drawer.Screen
@@ -70,7 +72,7 @@ export default function DrawerNavigator() {
           drawerIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />
           ),
-          title: "Minha Conta",
+          title: i18n.t("drawer.account"),
         }}
       />
       <Drawer.Screen
@@ -80,7 +82,7 @@ export default function DrawerNavigator() {
           drawerIcon: ({ color, size }) => (
             <Feather name="settings" size={size} color={color} />
           ),
-          title: "Configurações",
+          title: i18n.t("drawer.settings"),
         }}
       />
     </Drawer.Navigator>

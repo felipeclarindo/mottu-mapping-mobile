@@ -3,7 +3,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
-  StyleSheet,
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
@@ -20,19 +19,23 @@ import { HomeScreenNavigationProp } from "../model/navigation";
 import { motoService } from "../service/motoService";
 import { CountSectorDTO } from "../model/MotoModel";
 import i18n from "../i18n/i18n";
-import { onLanguageChange } from "../i18n/i18n"; 
+import { onLanguageChange } from "../i18n/i18n";
+import { useTheme } from "../context/ThemeContext";
+import { homeViewStyles } from "../theme/styles";
 
-
-const chartConfig = {
-  backgroundGradientFrom: "#121212",
-  backgroundGradientTo: "#121212",
-  color: (opacity = 1) => `rgba(163, 230, 53, ${opacity})`,
-  labelColor: () => "#C7D6B9",
+const getChartConfig = (colors: any) => ({
+  backgroundGradientFrom: colors.background,
+  backgroundGradientTo: colors.background,
+  color: (opacity = 1) =>
+    colors.primary + Math.floor(opacity * 255).toString(16),
+  labelColor: () => colors.text,
   barPercentage: 1.0,
   decimalPlaces: 0,
-};
+});
 
 const HomePage = () => {
+  const { colors } = useTheme();
+  const styles = homeViewStyles(colors);
   const [modalVisible, setModalVisible] = useState(false);
   const [showRelatorioButtons, setShowRelatorioButtons] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,12 +50,10 @@ const HomePage = () => {
   const [language, setLanguage] = useState(i18n.locale);
 
   React.useEffect(() => {
-    // registra listener que atualiza o state quando o idioma muda
     const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
     return unsubscribe;
   }, []);
 
-  // Força re-render quando o idioma muda
   const t = i18n.translations[language] || i18n.translations.pt;
 
   useFocusEffect(
@@ -68,7 +69,17 @@ const HomePage = () => {
     }, [i18n.locale])
   );
 
-  const labels = sectorCounts.map((s) => s.sectorName);
+  const normalize = (str: string) =>
+    str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/\s+/g, "");
+
+  const labels = sectorCounts.map((s) => {
+    const key = normalize(s.sectorName);
+    return t.home?.sectors?.[key] || t.patio?.sectors?.[key] || s.sectorName;
+  });
   const values = sectorCounts.map((s) => s.motoCount);
 
   const showImage = () => {
@@ -101,72 +112,45 @@ const HomePage = () => {
 
         <Text style={styles.subtitle}>{t.home.subtitle}</Text>
         {sectorLoading ? (
-          <ActivityIndicator color="#54C65B" style={{ marginVertical: 24 }} />
+          <ActivityIndicator
+            color={colors.primary}
+            style={styles.loadingContainer}
+          />
         ) : sectorError ? (
-          <Text style={{ color: "#ff4444", textAlign: "center" }}>
-            {sectorError}
-          </Text>
+          <Text style={styles.loadingText}>{sectorError}</Text>
         ) : (
           <>
             <BarChart
               data={{ labels, datasets: [{ data: values }] }}
               width={Dimensions.get("window").width - 40}
               height={220}
-              chartConfig={chartConfig}
+              chartConfig={getChartConfig(colors)}
               style={styles.chart}
               fromZero
               yAxisLabel=""
               yAxisSuffix=""
             />
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                marginTop: 12,
-              }}
-            >
-              {sectorCounts.map((s) => (
-                <View
-                  key={s.sectorName}
-                  style={{
-                    backgroundColor: "#232",
-                    borderRadius: 8,
-                    padding: 12,
-                    margin: 6,
-                    minWidth: 100,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#C7D6B9",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                    }}
-                  >
-                    {i18n.t(`home.sectors.${s.sectorName.toLowerCase()}`, { defaultValue: s.sectorName })}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#54C65B",
-                      fontSize: 22,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {s.motoCount}
-                  </Text>
-                </View>
-              ))}
+            <View style={styles.buttonsContainer}>
+              {sectorCounts.map((s) => {
+                const key = normalize(s.sectorName);
+                const translated =
+                  t.home?.sectors?.[key] ||
+                  t.patio?.sectors?.[key] ||
+                  s.sectorName;
+                return (
+                  <View key={s.sectorName} style={styles.button}>
+                    <Text style={styles.buttonText}>{translated}</Text>
+                    <Text style={styles.buttonText}>{s.motoCount}</Text>
+                  </View>
+                );
+              })}
             </View>
           </>
         )}
 
         <Separator />
 
-        <Text style={styles.subtitle}>
-          {t.home.description}
-        </Text>
+        <Text style={styles.subtitle}>{t.home.description}</Text>
 
         <Pressable
           onPress={showImage}
@@ -177,14 +161,12 @@ const HomePage = () => {
             loading && { opacity: 0.6 },
           ]}
         >
-          <Text style={styles.mainButtonText}>
-            {t.home.showImage}
-          </Text>
+          <Text style={styles.mainButtonText}>{t.home.showImage}</Text>
         </Pressable>
 
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#54C65B" />
+            <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>{t.home.loading}</Text>
           </View>
         )}
@@ -219,83 +201,5 @@ const HomePage = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#121212" },
-  content: { padding: 20 },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 16,
-    color: "#54C65B",
-  },
-  subtitle: {
-    textAlign: "center",
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#54C65B",
-    marginTop: 16,
-    marginBottom: 12,
-  },
-  chart: {
-    marginVertical: 8,
-    borderRadius: 12,
-  },
-  mainButton: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 24,
-    elevation: 5,
-  },
-  mainButtonText: {
-    color: "#121212",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  loadingContainer: {
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: "#54C65B",
-    fontWeight: "500",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-    marginBottom: 24,
-  },
-  button: {
-    flex: 1,
-    backgroundColor: "#2E7D32",
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    elevation: 3,
-  },
-  buttonText: {
-    color: "#DFF0D8",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  logoutButton: {
-    backgroundColor: "#D9534F",
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  logoutButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-});
 
 export default HomePage;

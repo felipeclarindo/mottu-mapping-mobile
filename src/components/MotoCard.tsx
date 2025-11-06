@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   Alert,
   TouchableOpacity,
@@ -10,8 +9,9 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import i18n from "../i18n/i18n";
-import { onLanguageChange }  from "../i18n/i18n";
-
+import { onLanguageChange } from "../i18n/i18n";
+import { useTheme } from "../context/ThemeContext";
+import { motoCardStyles } from "../theme/styles";
 
 const MotoCard = ({
   plate,
@@ -22,13 +22,13 @@ const MotoCard = ({
   onEdit,
 }: any) => {
   const [language, setLanguage] = useState(i18n.locale);
+  const t = i18n.translations[language] || i18n.translations.pt;
+  const { colors } = useTheme();
+  const styles = motoCardStyles(colors);
   React.useEffect(() => {
     const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
     return unsubscribe;
   }, []);
-  
-
-  const t = i18n.translations[language] || i18n.translations.pt;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,18 +37,14 @@ const MotoCard = ({
   );
 
   const handleDelete = () => {
-    Alert.alert(
-      "Remover moto",
-      "Tem certeza que deseja remover esta moto?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Remover",
-          style: "destructive",
-          onPress: () => onDelete(motorcycleId),
-        },
-      ]
-    );
+    Alert.alert("Remover moto", "Tem certeza que deseja remover esta moto?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Remover",
+        style: "destructive",
+        onPress: () => onDelete(motorcycleId),
+      },
+    ]);
   };
 
   return (
@@ -60,7 +56,20 @@ const MotoCard = ({
       />
       <View style={styles.infoRow}>
         <Text style={styles.label}>{t.patio.sector}</Text>
-        <Text style={styles.value}>{sector?.name}</Text>
+        <Text style={styles.value}>
+          {(() => {
+            if (!sector?.name) return "";
+            const normalize = (str: string) =>
+              str
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/\p{Diacritic}/gu, "")
+                .replace(/\s+/g, "");
+            const key = normalize(sector.name);
+            const translated = t.patio.sectors[key] || sector.name;
+            return translated;
+          })()}
+        </Text>
       </View>
       <View style={styles.infoRow}>
         <Text style={styles.label}>{t.patio.sectorColor}</Text>
@@ -85,7 +94,7 @@ const MotoCard = ({
         }}
       >
         <TouchableOpacity onPress={onEdit}>
-          <Feather name="edit-3" size={24} color="#54C65B" />
+          <Feather name="edit-3" size={24} color={colors.primary} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDelete}>
           <Feather name="trash-2" size={24} color="#f31c0c" />
@@ -94,63 +103,5 @@ const MotoCard = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#1F1F1F",
-    borderRadius: 12,
-    padding: 12,
-    width: "47%",
-    marginBottom: 16,
-    marginHorizontal: "1.5%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  image: {
-    width: "100%",
-    height: 280,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  colorSquare: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    marginLeft: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#54C65B",
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#C7D6B9",
-    textAlign: "center",
-    marginBottom: 12,
-  },
-  infoRow: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 6,
-  },
-  label: {
-    fontSize: 12,
-    color: "#888",
-    fontWeight: "600",
-  },
-  value: {
-    fontSize: 12,
-    color: "#FFF",
-    fontWeight: "500",
-  },
-});
 
 export default MotoCard;

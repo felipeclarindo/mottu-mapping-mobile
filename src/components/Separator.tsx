@@ -1,16 +1,11 @@
 import { View } from "react-native";
+import { useTheme } from "../context/ThemeContext";
+import { separatorStyles } from "../theme/styles";
 
 const Separator = () => {
+  const { colors } = useTheme();
+  const styles = separatorStyles(colors);
   return <View style={styles.separator} />;
-};
-
-const styles = {
-  separator: {
-    height: 1,
-    width: "100%" as const,
-    backgroundColor: "#2A2A2A",
-    marginVertical: 10,
-  },
 };
 
 export default Separator;

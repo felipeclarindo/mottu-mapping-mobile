@@ -14,68 +14,55 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LoginScreenNavigationProp } from "../model/navigation";
-
 import { User } from "../model/UserModel";
 import { useUserControl } from "../control/userControl";
 import { useAuth } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import i18n, { changeLanguage } from "../i18n/i18n";
-import { onLanguageChange } from "../i18n/i18n"; 
+import { onLanguageChange } from "../i18n/i18n";
+import { useTheme } from "../context/ThemeContext";
+import { loginViewStyles } from "../theme/styles";
 
 const LoginPage = () => {
-  const [user, setUser] = useState<User>({
-    idUser: null,
-    username: "",
-    password: "",
-  });
-
-  const { login, loading } = useUserControl();
+  const { colors } = useTheme();
+  const styles = loginViewStyles(colors);
+  const [user, setUser] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [lang, setLang] = useState(i18n.locale);
+  const t = i18n.translations[lang] || i18n.translations.pt;
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const { login } = useUserControl();
   const { setUser: setAuthUser } = useAuth();
 
-  const navigation = useNavigation<LoginScreenNavigationProp>();
-
-  // estado local para idioma atual
-  const [lang, setLang] = useState(i18n.locale);
-
-  React.useEffect(() => {
-    // registra listener que atualiza o state quando o idioma muda
-    const unsubscribe = onLanguageChange(() => setLang(i18n.locale));
-    return unsubscribe;
-  }, []);
-
-  const t = i18n.translations[i18n.locale] || i18n.translations.pt;
-
   const handleLogin = async () => {
-    if (!user.username || !user.password) {
-      Alert.alert(t.login.requiredFields, t.login.fillFields);
-      return;
-    }
-    if (user.password.length < 6) {
-      Alert.alert(t.login.invalidPassword, t.login.passwordLength);
-      return;
-    }
+    setLoading(true);
+    setError(null);
     try {
-      const resp = await login(user.username, user.password);
-      await SecureStore.setItemAsync("jwt_token", resp.token);
+      const res = await login(user.username, user.password);
+      await SecureStore.setItemAsync("jwt_token", res.token);
       setAuthUser({
-        idUser: null,
-        username: resp.username,
-        password: "",
+        username: (res as any).username ?? (res as any).user?.username ?? "",
+        idUser:
+          (res as any).idUser ??
+          (res as any).id ??
+          (res as any).userId ??
+          (res as any).user?.id ??
+          "",
       });
-      Alert.alert(t.login.welcome, t.login.loginSuccess);
-      setUser({ idUser: null, username: "", password: "" });
-      navigation.navigate("drawer");
+
+      navigation.reset({ index: 0, routes: [{ name: "drawer" }] });
     } catch (e: any) {
-      let message =
-        typeof e === "string" ? e : e?.message || t.login.loginFailed;
-      Alert.alert(t.login.loginError, message);
+      setError(e?.message || "Erro ao fazer login");
+    } finally {
+      setLoading(false);
     }
   };
 
   const toggleLanguage = () => {
-    const newLang = lang === "pt" ? "es" : "pt";
-    changeLanguage(newLang);
-    setLang(newLang);
+    const next = lang === "pt" ? "es" : "pt";
+    i18n.locale = next;
+    setLang(next);
   };
 
   return (
@@ -93,11 +80,11 @@ const LoginPage = () => {
           resizeMode="contain"
         />
 
-        <Text style={styles.title}>{t.login.title}</Text>
+        <Text style={styles.title}>{t.login?.title || "Login"}</Text>
 
         <TextInput
-          placeholder={t.login.username}
-          placeholderTextColor="#888"
+          placeholder={t.login?.username || "Usuário"}
+          placeholderTextColor={colors.text}
           style={styles.input}
           autoCapitalize="none"
           value={user.username}
@@ -107,8 +94,8 @@ const LoginPage = () => {
           editable={!loading}
         />
         <TextInput
-          placeholder={t.login.password}
-          placeholderTextColor="#888"
+          placeholder={t.login?.password || "Senha"}
+          placeholderTextColor={colors.text}
           style={styles.input}
           secureTextEntry
           value={user.password}
@@ -118,23 +105,31 @@ const LoginPage = () => {
           editable={!loading}
         />
 
+        {error && (
+          <Text style={{ color: "red", textAlign: "center", marginBottom: 12 }}>
+            {error}
+          </Text>
+        )}
         <TouchableOpacity
           style={[styles.button, loading && { opacity: 0.7 }]}
           onPress={handleLogin}
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator color="#121212" />
+            <ActivityIndicator color={colors.background} />
           ) : (
-            <Text style={styles.buttonText}>{t.login.loginButton}</Text>
+            <Text style={styles.buttonText}>
+              {t.login?.loginButton || "Entrar"}
+            </Text>
           )}
         </TouchableOpacity>
 
-        {/* Botão para trocar idioma */}
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity onPress={toggleLanguage}>
             <Text style={styles.langButton}>
-              {lang === "pt" ? "🇪🇸 Mudar para Espanhol" : "🇧🇷 Cambiar a Portugués"}
+              {lang === "pt"
+                ? "🇪🇸 Mudar para Espanhol"
+                : "🇧🇷 Cambiar a Português"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -142,53 +137,5 @@ const LoginPage = () => {
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#121212" },
-  content: {
-    paddingVertical: 10,
-    paddingHorizontal: 45,
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#54C65B",
-    textAlign: "center",
-    marginBottom: 32,
-  },
-  input: {
-    height: 50,
-    backgroundColor: "#1F1F1F",
-    borderColor: "#3A6E33",
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    marginBottom: 20,
-    color: "#fff",
-  },
-  button: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  buttonText: { color: "#121212", fontSize: 16, fontWeight: "700" },
-  footerText: { textAlign: "center", color: "#C7D6B9", fontSize: 14 },
-  linkText: {
-    color: "#54C65B",
-    fontWeight: "700",
-    textDecorationLine: "underline",
-  },
-  logo: { width: 250, height: 200, alignSelf: "center", marginBottom: 40 },
-  langButton: {
-    color: "#54C65B",
-    fontSize: 16,
-    fontWeight: "600",
-    textDecorationLine: "underline",
-  },
-});
 
 export default LoginPage;
