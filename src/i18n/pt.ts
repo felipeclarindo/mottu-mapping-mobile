@@ -89,6 +89,9 @@ export default {
     language: "Idioma",
     portuguese: "Português",
     spanish: "Espanhol",
+    theme: "Tema",
+    lightMode: "Modo Claro",
+    darkMode: "Modo Escuro",
   },
   motoModal: {
     createTitle: "Cadastrar Moto",

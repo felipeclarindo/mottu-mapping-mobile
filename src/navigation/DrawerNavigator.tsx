@@ -1,4 +1,4 @@
-import i18n from "../i18n/i18n";
+import i18n, { onLanguageChange } from "../i18n/i18n";
 
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -17,8 +17,15 @@ const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator() {
   const { colors } = useTheme();
+  const [language, setLanguage] = React.useState(i18n.locale);
+
+  React.useEffect(() => {
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
   return (
     <Drawer.Navigator
+      key={language}
       id={undefined}
       initialRouteName="home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}

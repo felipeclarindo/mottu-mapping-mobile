@@ -88,6 +88,9 @@ export default {
     language: "Idioma",
     portuguese: "Portugués",
     spanish: "Español",
+    theme: "Tema",
+    lightMode: "Modo Claro",
+    darkMode: "Modo Oscuro",
   },
   motoModal: {
     createTitle: "Registrar Moto",

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import {
@@ -13,8 +8,10 @@ import {
   useFocusEffect,
 } from "@react-navigation/native";
 
-import i18n from "../i18n/i18n";
-import { onLanguageChange } from "../i18n/i18n";
+import i18n, {
+  onLanguageChange,
+  changeLanguage as setI18nLanguage,
+} from "../i18n/i18n";
 import { useTheme } from "../context/ThemeContext";
 import { settingsViewStyles } from "../theme/styles";
 
@@ -38,7 +35,7 @@ const SettingsPage = () => {
   );
 
   const changeLanguage = (lang: "pt" | "es") => {
-    i18n.locale = lang;
+    setI18nLanguage(lang);
     setLanguage(lang);
   };
 
@@ -86,7 +83,7 @@ const SettingsPage = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Tema</Text>
+          <Text style={styles.sectionTitle}>{t.settings?.theme || "Tema"}</Text>
           <TouchableOpacity
             style={[
               styles.languageButton,
@@ -100,7 +97,9 @@ const SettingsPage = () => {
                 !isDark && styles.languageButtonTextActive,
               ]}
             >
-              {isDark ? "🌞 Modo Claro" : "🌙 Modo Escuro"}
+              {isDark
+                ? `🌞 ${t.settings?.lightMode || "Modo Claro"}`
+                : `🌙 ${t.settings?.darkMode || "Modo Escuro"}`}
             </Text>
           </TouchableOpacity>
         </View>
