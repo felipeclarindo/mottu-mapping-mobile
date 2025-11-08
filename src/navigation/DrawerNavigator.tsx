@@ -11,6 +11,7 @@ import ReportView from "../view/ReportView";
 import AccountView from "../view/AccountView";
 import CustomDrawerContent from "./CustomDrawerContent";
 import SettingsView from "../view/SettingsView";
+import AboutView from "../view/AboutView";
 
 const Drawer = createDrawerNavigator();
 
@@ -83,6 +84,16 @@ export default function DrawerNavigator() {
             <Feather name="settings" size={size} color={color} />
           ),
           title: i18n.t("drawer.settings"),
+        }}
+      />
+      <Drawer.Screen
+        name="about"
+        component={AboutView}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="info" size={size} color={color} />
+          ),
+          title: i18n.t("drawer.about"),
         }}
       />
     </Drawer.Navigator>

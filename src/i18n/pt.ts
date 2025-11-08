@@ -82,6 +82,7 @@ export default {
     account: "Minha Conta",
     settings: "Configurações",
     logout: "Sair",
+    about: "Sobre",
   },
   settings: {
     title: "Configurações",
