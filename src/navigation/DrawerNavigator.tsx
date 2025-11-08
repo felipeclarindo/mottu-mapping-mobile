@@ -1,74 +1,106 @@
+import i18n, { onLanguageChange } from "../i18n/i18n";
+
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Feather } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
-import HomePage from "../pages/pages/HomePage";
-import PatioPage from "../pages/pages/PatioPage";
-import ReportPage from "../pages/pages/ReportPage";
-import AccountPage from "../pages/pages/AccountPage";
+import HomeView from "../view/HomeView";
+import PatioView from "../view/PatioView";
+import ReportView from "../view/ReportView";
+import AccountView from "../view/AccountView";
 import CustomDrawerContent from "./CustomDrawerContent";
-import LoginPage from "../pages/auth/LoginPage";
+import SettingsView from "../view/SettingsView";
+import AboutView from "../view/AboutView";
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator() {
+  const { colors } = useTheme();
+  const [language, setLanguage] = React.useState(i18n.locale);
+
+  React.useEffect(() => {
+    const unsubscribe = onLanguageChange(() => setLanguage(i18n.locale));
+    return unsubscribe;
+  }, []);
   return (
     <Drawer.Navigator
+      key={language}
       id={undefined}
       initialRouteName="home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: "#54C65B",
-        drawerInactiveTintColor: "#8D8D8D",
+        drawerActiveTintColor: colors.primary,
+        drawerInactiveTintColor: colors.text + "99",
         drawerLabelStyle: {
           fontWeight: "600",
           fontSize: 16,
         },
-        drawerActiveBackgroundColor: "#1C1C1C",
+        drawerActiveBackgroundColor: colors.card,
         drawerStyle: {
-          backgroundColor: "#000000",
+          backgroundColor: colors.background,
         },
       }}
     >
       <Drawer.Screen
         name="home"
-        component={HomePage}
+        component={HomeView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
-          title: "Início",
+          title: i18n.t("drawer.home"),
         }}
       />
       <Drawer.Screen
         name="patio"
-        component={PatioPage}
+        component={PatioView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="map" size={size} color={color} />
           ),
-          title: "Pátio",
+          title: i18n.t("drawer.patio"),
         }}
       />
       <Drawer.Screen
         name="report"
-        component={ReportPage}
+        component={ReportView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="file-text" size={size} color={color} />
           ),
-          title: "Relatórios",
+          title: i18n.t("drawer.reports"),
         }}
       />
       <Drawer.Screen
         name="account"
-        component={AccountPage}
+        component={AccountView}
         options={{
           drawerIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />
           ),
-          title: "Minha Conta",
+          title: i18n.t("drawer.account"),
+        }}
+      />
+      <Drawer.Screen
+        name="settings"
+        component={SettingsView}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="settings" size={size} color={color} />
+          ),
+          title: i18n.t("drawer.settings"),
+        }}
+      />
+      <Drawer.Screen
+        name="about"
+        component={AboutView}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="info" size={size} color={color} />
+          ),
+          title: i18n.t("drawer.about"),
         }}
       />
     </Drawer.Navigator>
