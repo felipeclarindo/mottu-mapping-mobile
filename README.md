@@ -1,6 +1,6 @@
 🌍 [Leia em Português](README.pt-BR.md)
 
-# Mottu Mapping Mobile
+# Mottu Mapping App
 
 Mobile Application to get reports and can make the stock using a vision computational to identify motos in a patio.
 
@@ -16,11 +16,91 @@ Mobile Application to get reports and can make the stock using a vision computat
 
 ## Features
 
-- Interactive dashboard with charts showing motorcycle status.
+- Interactive dashboard with charts showing number of motos per sector
 - Real-time patio monitoring with images.
 - Generate reports based on collected data.
+- Bilingual support (Portuguese and Spanish)
 - Smooth navigation between Home, Patio, and Report screens.
-- Local user data storage and retrieval.
+- Dark and Light theme support
+
+## Directory Structure
+
+```
+│   App.tsx
+│
+├───assets # images, etc
+│       favicon.png
+│       logo.png
+│       moto.png
+│       patio.png
+│       profile-generic.jpg
+│
+├───components # reusable components
+│       Footer.tsx
+│       Header.tsx
+│       ImageModal.tsx
+│       MotoCard.tsx
+│       MotoModal.tsx
+│       Separator.tsx
+│
+├───context 
+│       AuthContext.tsx
+│       ThemeContext.tsx
+│
+├───control 
+│       modelControl.ts
+│       motoControl.ts
+│       sectorControl.ts
+│       userControl.ts
+│
+├───fetcher
+│       api.ts
+│       modelFetcher.ts
+│       motoFetcher.ts
+│       sectorFetcher.ts
+│       userFetcher.ts
+│
+├───i18n # bilingual support
+│       es.ts
+│       i18n.ts
+│       pt.ts
+│
+├───model
+│       ModelModel.ts
+│       MotoModel.ts
+│       navigation.ts
+│       SectorModel.ts
+│       UserModel.ts
+│
+├───navigation 
+│       AuthStack.tsx
+│       CustomDrawerContent.tsx
+│       DrawerNavigator.tsx
+│       MainNavigator.tsx
+│
+├───service
+│       authService.ts
+│       modelService.ts
+│       motoService.ts
+│       sectorService.ts
+│       userService.ts
+│
+├───theme
+│       colors.ts
+│       styles.ts
+│
+├───utils # report
+│       index.tsx
+│
+└───view 
+        AboutView.tsx
+        AccountView.tsx
+        HomeView.tsx
+        LoginView.tsx
+        PatioView.tsx
+        ReportView.tsx
+        SettingsView.tsx
+```
 
 ## Steps to install and run
 
@@ -68,13 +148,11 @@ Contributions are welcome! If you have suggestions for improvements, feel free t
 
 ## Team
 
-### **Felipe Clarindo**
+- Felipe Clarindo - RM554547, 2TDSPF
+- André Marcolongo - RM555285, 2TDSPV
+- Nathália Gomes da Silva - RM559945, 2TDSPV
 
-- RM: 554547, 2TDSPF
-
-### **André Marcolongo - andremarko no Github**
-
-- RM: 555285, 2TDPSV
+### 
 
 ## License
 

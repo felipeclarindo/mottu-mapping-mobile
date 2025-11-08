@@ -1,6 +1,6 @@
 🌍 [Read in English](README.md)
 
-# Mottu Mapping Mobile
+# Mottu Mapping App
 
 Aplicativo mobile para gerar relatórios e controlar o estoque usando visão computacional para identificar motos em um pátio.
 
@@ -16,11 +16,91 @@ Aplicativo mobile para gerar relatórios e controlar o estoque usando visão com
 
 ## Funcionalidades
 
-- Dashboard interativo com gráficos para acompanhamento do status das motos.
+- Dashboard interativo com gráficos para acompanhamento da quantidade de motos por setores
 - Visualização em tempo real do pátio com imagens capturadas.
 - Geração de relatórios baseados nos dados coletados.
+- Suporte bilingue (Português e Espanhol)
 - Navegação fácil entre telas do app (Home, Pátio, Relatório).
-- Armazenamento e recuperação de dados do usuário localmente.
+- Suporte a tema claro e escuro
+
+## Estrutura dos diretórios
+
+```
+│   App.tsx
+│
+├───assets # imagens, etc
+│       favicon.png
+│       logo.png
+│       moto.png
+│       patio.png
+│       profile-generic.jpg
+│
+├───components # componentes reutilizáveis
+│       Footer.tsx
+│       Header.tsx
+│       ImageModal.tsx
+│       MotoCard.tsx
+│       MotoModal.tsx
+│       Separator.tsx
+│
+├───context 
+│       AuthContext.tsx
+│       ThemeContext.tsx
+│
+├───control 
+│       modelControl.ts
+│       motoControl.ts
+│       sectorControl.ts
+│       userControl.ts
+│
+├───fetcher
+│       api.ts
+│       modelFetcher.ts
+│       motoFetcher.ts
+│       sectorFetcher.ts
+│       userFetcher.ts
+│
+├───i18n # suporte bilingue
+│       es.ts
+│       i18n.ts
+│       pt.ts
+│
+├───model
+│       ModelModel.ts
+│       MotoModel.ts
+│       navigation.ts
+│       SectorModel.ts
+│       UserModel.ts
+│
+├───navigation 
+│       AuthStack.tsx
+│       CustomDrawerContent.tsx
+│       DrawerNavigator.tsx
+│       MainNavigator.tsx
+│
+├───service
+│       authService.ts
+│       modelService.ts
+│       motoService.ts
+│       sectorService.ts
+│       userService.ts
+│
+├───theme
+│       colors.ts
+│       styles.ts
+│
+├───utils # relatório
+│       index.tsx
+│
+└───view 
+        AboutView.tsx
+        AccountView.tsx
+        HomeView.tsx
+        LoginView.tsx
+        PatioView.tsx
+        ReportView.tsx
+        SettingsView.tsx
+```
 
 ## Passos para instalação e execução
 
@@ -68,13 +148,10 @@ Contribuições são bem-vindas! Se você tiver sugestões de melhorias, sinta-s
 
 ## Time
 
-### **Felipe Clarindo**
+- Felipe Clarindo - RM554547, 2TDSPF
+- André Marcolongo - RM555285, 2TDSPV
+- Nathália Gomes da Silva - RM559945, 2TDSPV
 
-- RM: 554547
-
-### **André Marcolongo**
-
-- RM: 555285
 
 ## Licença
 
