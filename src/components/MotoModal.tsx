@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  Platform,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { motoModalStyles } from "../theme/styles";
@@ -16,6 +18,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { motoSchema, type Moto, type MotoError } from "../model/MotoModel";
 import i18n from "../i18n/i18n";
 import { onLanguageChange } from "../i18n/i18n";
+import * as Notifications from "expo-notifications";
 
 interface MotoModalProps {
   open: boolean;
@@ -30,6 +33,70 @@ const MotoModal: React.FC<MotoModalProps> = ({
   onSuccess,
   moto,
 }) => {
+  const schedulerNotificationHandler = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: `Moto ${plate || ""} cadastrada com sucesso!`,
+        body: `A moto ${plate || ""} foi cadastrada no sistema.`,
+      },
+      trigger: {
+        seconds: 10,
+      },
+    });
+  };
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      };
+    },
+  });
+
+  const notificationConfig = async () => {
+    let permissions = await Notifications.getPermissionsAsync();
+    if (permissions.status !== "granted") {
+      permissions = await Notifications.requestPermissionsAsync();
+    }
+    if (permissions.status !== "granted") {
+      Alert.alert("É necessária permissão para o envio de notificações.");
+      return;
+    }
+    const expoPushToken = await Notifications.getExpoPushTokenAsync();
+
+    const devicePushToken = await Notifications.getDevicePushTokenAsync();
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+      });
+    }
+  };
+
+  useEffect(() => {
+    notificationConfig();
+
+    const receivedSub = Notifications.addNotificationReceivedListener(() => {
+    });
+
+    const responseSub = Notifications.addNotificationResponseReceivedListener(
+      () => {
+      }
+    );
+
+    return () => {
+      try {
+        receivedSub.remove();
+      } catch (e) {}
+      try {
+        responseSub.remove();
+      } catch (e) {}
+    };
+  }, []);
+
   const {
     plate,
     setPlate,
@@ -125,6 +192,11 @@ const MotoModal: React.FC<MotoModalProps> = ({
         onClose();
       } else {
         await insertMoto();
+        try {
+          schedulerNotificationHandler();
+        } catch (e) {
+          console.log("Erro ao agendar notificação", e);
+        }
         if (onSuccess) onSuccess();
         onClose();
       }
