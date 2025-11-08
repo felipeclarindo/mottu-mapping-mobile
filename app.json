@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MottuMapping",
-    "slug": "mottu-mapping-mobile",
+    "slug": "mottu-mapping-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/favicon.png",
@@ -15,10 +15,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.felipeclarindo.mottumapping"
+      "bundleIdentifier": "mottu.mapping.app"
     },
     "android": {
-      "package": "com.felipeclarindo.mottumapping",
+      "package": "mottu.mapping.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#000000"
@@ -29,7 +29,15 @@
     },
     "plugins": [
       "expo-localization",
-      "expo-secure-store"
-    ]
+      "expo-secure-store",
+      "expo-notifications",
+      "expo-dev-client"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c6ff7051-505b-4da6-878a-289457255b0e"
+      }
+    },
+    "owner": "andremarko"
   }
 }
