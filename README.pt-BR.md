@@ -150,7 +150,7 @@ Contribuições são bem-vindas! Se você tiver sugestões de melhorias, sinta-s
 
 - Felipe Clarindo - RM554547, 2TDSPF
 - André Marcolongo - RM555285, 2TDSPV
-- Nathália Gomes da Silva - RM559945, 2TDSPV
+- Nathália Gomes da Silva - RM554945, 2TDSPV
 
 
 ## Licença
