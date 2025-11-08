@@ -1,5 +1,4 @@
 import React from "react";
-
 import MainNavigator from "./navigation/MainNavigator";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
